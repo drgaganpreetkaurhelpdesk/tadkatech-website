@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TadkaTech — The Complete Restaurant Operating System</title>
+<meta name="description" content="TadkaTech is the all-in-one restaurant operating system — orders, kitchen display, inventory, billing, staff, delivery, customer self-ordering and WhatsApp, with dedicated apps for owners, waiters, kitchen, riders and diners.">
+<meta name="theme-color" content="#08090f">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23f59e0b'/><text x='16' y='23' font-family='Georgia,serif' font-size='20' font-weight='900' text-anchor='middle' fill='%230a0b0f'>T</text></svg>">
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="TadkaTech — The Complete Restaurant Operating System">
+<meta property="og:description" content="One platform for orders, KDS, inventory, billing, staff, delivery, customer self-ordering and WhatsApp. Multi-tenant. Real-time. Built for Indian restaurants.">
+<meta property="og:url" content="https://tadkatech.in">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+/* ─── Reset & Base ─────────────────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#08090f;
+  --bg2:#0e0f1a;
+  --bg3:#13152a;
+  --card:#161829;
+  --border:rgba(255,255,255,0.07);
+  --border2:rgba(255,255,255,0.12);
+  --amber:#f59e0b;
+  --amber2:#fbbf24;
+  --amber-dim:rgba(245,158,11,0.15);
+  --indigo:#6366f1;
+  --indigo-dim:rgba(99,102,241,0.15);
+  --green:#22c55e;
+  --red:#ef4444;
+  --text:#f1f5f9;
+  --muted:#94a3b8;
+  --muted2:#64748b;
+  --radius:12px;
+  --radius-lg:16px;
+  --radius-xl:24px;
+  --shadow:0 0 0 1px rgba(255,255,255,0.05),0 8px 32px rgba(0,0,0,0.4);
+  --shadow-glow:0 0 60px rgba(245,158,11,0.12);
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{
+  font-family:'Inter',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  overflow-x:hidden;
+  line-height:1.6;
+}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+
+/* ─── Scrollbar ─────────────────────────────────────────────────────────────── */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--bg3);border-radius:3px}
+
+/* ─── Utility ───────────────────────────────────────────────────────────────── */
+.container{max-width:1140px;margin:0 auto;padding:0 24px}
+.tag{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--amber);background:var(--amber-dim);border:1px solid rgba(245,158,11,0.25);border-radius:20px;padding:4px 12px}
+.tag.indigo{color:var(--indigo);background:var(--indigo-dim);border-color:rgba(99,102,241,0.25)}
+.tag.green{color:var(--green);background:rgba(34,197,94,0.1);border-color:rgba(34,197,94,0.25)}
+.section-label{display:flex;justify-content:center;margin-bottom:20px}
+.section-title{font-family:'Syne',sans-serif;font-size:clamp(28px,4vw,48px);font-weight:800;text-align:center;line-height:1.15;letter-spacing:-.02em}
+.section-sub{text-align:center;color:var(--muted);font-size:17px;max-width:560px;margin:16px auto 0;line-height:1.7}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:13px 28px;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;border:none;transition:all .2s}
+.btn-primary{background:var(--amber);color:#0a0b0f}
+.btn-primary:hover{background:var(--amber2);transform:translateY(-1px);box-shadow:0 8px 24px rgba(245,158,11,0.3)}
+.btn-ghost{background:transparent;color:var(--text);border:1px solid var(--border2)}
+.btn-ghost:hover{background:rgba(255,255,255,0.05);transform:translateY(-1px)}
+
+/* ─── Noise grain overlay ───────────────────────────────────────────────────── */
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:9999;opacity:.4;
+}
+
+/* ─── Navigation ────────────────────────────────────────────────────────────── */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:16px 0;
+  transition:background .3s,backdrop-filter .3s,border-color .3s;
+}
+.nav.scrolled{
+  background:rgba(8,9,15,0.85);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.nav-inner{display:flex;align-items:center;justify-content:space-between}
+.nav-logo{display:flex;align-items:center;gap:10px;font-family:'Syne',sans-serif;font-size:22px;font-weight:800;letter-spacing:-.02em}
+.nav-logo-icon{
+  width:34px;height:34px;border-radius:8px;
+  background:var(--amber);color:#0a0b0f;
+  display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;
+  font-family:serif;
+}
+.nav-links{display:flex;align-items:center;gap:32px}
+.nav-links a{font-size:14px;font-weight:500;color:var(--muted);transition:color .2s}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{display:flex;align-items:center;gap:12px}
+
+/* ─── Hero ──────────────────────────────────────────────────────────────────── */
+.hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:120px 24px 80px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+/* Radial glow bg */
+.hero::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 60% at 50% 20%, rgba(245,158,11,0.08) 0%, transparent 70%),
+             radial-gradient(ellipse 50% 40% at 20% 80%, rgba(99,102,241,0.06) 0%, transparent 60%);
+  pointer-events:none;
+}
+/* Floating orbs */
+.orb{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none;animation:orbFloat 8s ease-in-out infinite}
+.orb1{width:500px;height:500px;background:rgba(245,158,11,0.06);top:-100px;left:-100px;animation-delay:0s}
+.orb2{width:400px;height:400px;background:rgba(99,102,241,0.07);bottom:-50px;right:-50px;animation-delay:-3s}
+.orb3{width:300px;height:300px;background:rgba(245,158,11,0.04);top:50%;right:10%;animation-delay:-5s}
+@keyframes orbFloat{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-30px) scale(1.05)}}
+
+.hero-eyebrow{margin-bottom:24px;position:relative;z-index:1}
+.hero-title{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(40px,7vw,80px);
+  font-weight:800;
+  letter-spacing:-.03em;
+  line-height:1.05;
+  max-width:900px;
+  position:relative;z-index:1;
+}
+.hero-title .accent{color:var(--amber)}
+.hero-sub{
+  margin:24px auto 0;
+  max-width:560px;
+  font-size:18px;
+  color:var(--muted);
+  line-height:1.75;
+  position:relative;z-index:1;
+}
+.hero-actions{
+  display:flex;align-items:center;gap:12px;margin-top:40px;
+  position:relative;z-index:1;flex-wrap:wrap;justify-content:center;
+}
+.hero-note{margin-top:16px;font-size:13px;color:var(--muted2);position:relative;z-index:1}
+
+/* ─── 3D Hero Mockup ─────────────────────────────────────────────────────────── */
+.hero-mockup-wrap{
+  margin-top:72px;
+  position:relative;z-index:1;
+  perspective:1200px;
+  width:100%;max-width:920px;
+}
+.hero-mockup{
+  transform:rotateX(14deg) rotateY(-4deg) rotateZ(-1deg);
+  transform-style:preserve-3d;
+  animation:heroFloat 7s ease-in-out infinite;
+  border-radius:14px;
+  overflow:hidden;
+  box-shadow:
+    0 2px 0 0 rgba(255,255,255,0.08),
+    0 0 0 1px rgba(255,255,255,0.06),
+    0 40px 80px -20px rgba(0,0,0,0.8),
+    0 0 120px rgba(245,158,11,0.1);
+}
+@keyframes heroFloat{
+  0%,100%{transform:rotateX(14deg) rotateY(-4deg) rotateZ(-1deg) translateY(0)}
+  50%{transform:rotateX(12deg) rotateY(-2deg) rotateZ(-1deg) translateY(-12px)}
+}
+.hero-mockup-shadow{
+  position:absolute;bottom:-40px;left:10%;right:10%;
+  height:60px;
+  background:radial-gradient(ellipse,rgba(245,158,11,0.15) 0%,transparent 70%);
+  filter:blur(20px);
+  animation:heroFloat 7s ease-in-out infinite;
+}
+
+/* ─── Trust Bar ─────────────────────────────────────────────────────────────── */
+.trust{padding:48px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.trust-inner{display:flex;align-items:center;gap:40px;flex-wrap:wrap;justify-content:center}
+.trust-label{font-size:13px;color:var(--muted2);font-weight:500;white-space:nowrap}
+.trust-divider{width:1px;height:24px;background:var(--border)}
+.trust-stat{display:flex;flex-direction:column;align-items:center;gap:2px}
+.trust-stat-num{font-size:22px;font-weight:800;color:var(--text);font-family:'Syne',sans-serif}
+.trust-stat-label{font-size:12px;color:var(--muted2)}
+
+/* ─── Feature Grid ───────────────────────────────────────────────────────────── */
+.features{padding:100px 0}
+.feature-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1px;
+  background:var(--border);
+  border:1px solid var(--border);
+  border-radius:var(--radius-xl);
+  overflow:hidden;
+  margin-top:64px;
+}
+.feature-card{
+  background:var(--card);
+  padding:36px 32px;
+  transition:background .2s;
+  position:relative;
+  overflow:hidden;
+}
+.feature-card::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 120% 80% at 50% 0%,rgba(245,158,11,0.05),transparent 60%);
+  opacity:0;transition:opacity .3s;
+}
+.feature-card:hover{background:#1a1c30}
+.feature-card:hover::before{opacity:1}
+.feature-icon{
+  width:48px;height:48px;border-radius:12px;
+  background:var(--amber-dim);border:1px solid rgba(245,158,11,0.2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;margin-bottom:20px;
+}
+.feature-icon.indigo{background:var(--indigo-dim);border-color:rgba(99,102,241,0.2)}
+.feature-icon.green{background:rgba(34,197,94,0.1);border-color:rgba(34,197,94,0.2)}
+.feature-icon.blue{background:rgba(59,130,246,0.1);border-color:rgba(59,130,246,0.2)}
+.feature-icon.red{background:rgba(239,68,68,0.1);border-color:rgba(239,68,68,0.2)}
+.feature-icon.purple{background:rgba(168,85,247,0.1);border-color:rgba(168,85,247,0.2)}
+.feature-name{font-size:17px;font-weight:700;margin-bottom:10px;letter-spacing:-.01em}
+.feature-desc{font-size:14px;color:var(--muted);line-height:1.65}
+.feature-pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.pill{font-size:11px;font-weight:600;color:var(--muted2);background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:6px;padding:3px 9px}
+
+/* ─── Showcase Section ───────────────────────────────────────────────────────── */
+.showcase{padding:100px 0}
+.showcase-tabs{display:flex;gap:4px;justify-content:center;margin:48px 0 40px;flex-wrap:wrap}
+.stab{
+  padding:9px 20px;border-radius:8px;font-size:13px;font-weight:600;
+  cursor:pointer;border:1px solid transparent;
+  color:var(--muted);background:transparent;
+  transition:all .2s;
+}
+.stab.active,.stab:hover{color:var(--text);background:var(--card);border-color:var(--border2)}
+.stab.active{color:var(--amber)}
+.showcase-display{
+  perspective:1000px;
+  position:relative;
+}
+.showcase-mockup{
+  border-radius:16px;
+  overflow:hidden;
+  border:1px solid var(--border2);
+  box-shadow:var(--shadow),var(--shadow-glow);
+  transition:transform .4s;
+}
+.showcase-mockup:hover{transform:rotateX(2deg) rotateY(-1deg)}
+/* Browser chrome bar */
+.browser-bar{
+  background:#1a1c2e;
+  padding:10px 16px;
+  display:flex;align-items:center;gap:10px;
+  border-bottom:1px solid var(--border);
+}
+.browser-dots{display:flex;gap:6px}
+.browser-dot{width:11px;height:11px;border-radius:50%}
+.browser-dot:nth-child(1){background:#ef4444}
+.browser-dot:nth-child(2){background:#f59e0b}
+.browser-dot:nth-child(3){background:#22c55e}
+.browser-url{
+  flex:1;background:rgba(255,255,255,0.05);border:1px solid var(--border);
+  border-radius:6px;padding:4px 12px;font-size:12px;color:var(--muted2);
+  font-family:monospace;margin:0 12px;
+}
+
+/* ─── Split Feature Sections ─────────────────────────────────────────────────── */
+.split-section{padding:80px 0}
+.split-inner{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.split-inner.reverse{direction:rtl}
+.split-inner.reverse>*{direction:ltr}
+.split-text .tag{margin-bottom:16px}
+.split-title{font-family:'Syne',sans-serif;font-size:clamp(24px,3.5vw,38px);font-weight:800;letter-spacing:-.02em;line-height:1.2;margin-bottom:16px}
+.split-desc{color:var(--muted);font-size:16px;line-height:1.75;margin-bottom:24px}
+.check-list{display:flex;flex-direction:column;gap:12px}
+.check-item{display:flex;align-items:flex-start;gap:12px;font-size:14px;color:var(--muted)}
+.check-item::before{content:'✓';color:var(--amber);font-weight:700;flex-shrink:0;margin-top:1px}
+.split-visual{border-radius:var(--radius-xl);overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--border2);transition:transform .3s}
+.split-visual:hover{transform:scale(1.01) translateY(-4px)}
+
+/* ─── Stats Section ──────────────────────────────────────────────────────────── */
+.stats-section{
+  padding:80px 0;
+  background:linear-gradient(180deg,var(--bg2) 0%,var(--bg) 100%);
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:48px;text-align:center;margin-top:56px}
+.stat-num{font-family:'Syne',sans-serif;font-size:clamp(36px,5vw,60px);font-weight:800;color:var(--amber);line-height:1}
+.stat-label{font-size:14px;color:var(--muted);margin-top:8px}
+
+/* ─── Roles Section ──────────────────────────────────────────────────────────── */
+.roles-section{padding:100px 0}
+.roles-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:56px}
+.role-card{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);
+  padding:28px 24px;transition:all .2s;
+}
+.role-card:hover{border-color:var(--border2);transform:translateY(-3px);box-shadow:var(--shadow)}
+.role-badge{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;margin-bottom:12px}
+.role-dot{width:8px;height:8px;border-radius:50%}
+.role-name{font-size:16px;font-weight:700;margin-bottom:8px}
+.role-desc{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:14px}
+.role-perms{display:flex;flex-wrap:wrap;gap:5px}
+.role-perm{font-size:11px;color:var(--muted2);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:5px;padding:2px 8px}
+
+/* ─── Stack Section ──────────────────────────────────────────────────────────── */
+.stack-section{padding:80px 0}
+.stack-grid{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:48px}
+.stack-chip{
+  display:flex;align-items:center;gap:8px;
+  background:var(--card);border:1px solid var(--border);border-radius:10px;
+  padding:10px 18px;font-size:13px;font-weight:600;color:var(--muted);
+  transition:all .2s;
+}
+.stack-chip:hover{border-color:var(--border2);color:var(--text);transform:translateY(-2px)}
+.stack-icon{font-size:17px}
+
+/* ─── CTA ────────────────────────────────────────────────────────────────────── */
+.cta-section{
+  padding:100px 0;
+  position:relative;overflow:hidden;
+}
+.cta-section::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 70% 80% at 50% 50%,rgba(245,158,11,0.08) 0%,transparent 70%);
+}
+.cta-box{
+  background:var(--card);
+  border:1px solid rgba(245,158,11,0.2);
+  border-radius:var(--radius-xl);
+  padding:72px;
+  text-align:center;
+  position:relative;z-index:1;
+  box-shadow:0 0 80px rgba(245,158,11,0.07);
+}
+.cta-title{font-family:'Syne',sans-serif;font-size:clamp(28px,4vw,52px);font-weight:800;letter-spacing:-.03em;margin:16px 0}
+.cta-sub{color:var(--muted);font-size:17px;max-width:480px;margin:0 auto 40px;line-height:1.7}
+
+/* ─── Footer ─────────────────────────────────────────────────────────────────── */
+.footer{padding:48px 0;border-top:1px solid var(--border)}
+.footer-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px}
+.footer-logo{display:flex;align-items:center;gap:8px;font-family:'Syne',sans-serif;font-weight:800;font-size:18px}
+.footer-links{display:flex;gap:24px}
+.footer-links a{font-size:13px;color:var(--muted2);transition:color .2s}
+.footer-links a:hover{color:var(--text)}
+.footer-copy{font-size:12px;color:var(--muted2)}
+
+/* ─── Animations / Scroll reveal ─────────────────────────────────────────────── */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .6s,transform .6s}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-delay-1{transition-delay:.1s}
+.reveal-delay-2{transition-delay:.2s}
+.reveal-delay-3{transition-delay:.3s}
+.reveal-delay-4{transition-delay:.4s}
+
+/* ─── Responsive ─────────────────────────────────────────────────────────────── */
+@media(max-width:900px){
+  .feature-grid{grid-template-columns:repeat(2,1fr)}
+  .split-inner{grid-template-columns:1fr;gap:40px}
+  .split-inner.reverse{direction:ltr}
+  .stats-grid{grid-template-columns:repeat(2,1fr);gap:32px}
+  .roles-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:600px){
+  .feature-grid{grid-template-columns:1fr}
+  .stats-grid{grid-template-columns:1fr;gap:24px}
+  .roles-grid{grid-template-columns:1fr}
+  .nav-links{display:none}
+  .cta-box{padding:40px 24px}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════ NAV ══ -->
+<nav class="nav" id="nav">
+  <div class="container nav-inner">
+    <a href="#" class="nav-logo">
+      <div class="nav-logo-icon">T</div>
+      TadkaTech
+    </a>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#modules">Modules</a>
+      <a href="#roles">Roles</a>
+      <a href="#stack">Stack</a>
+    </div>
+    <div class="nav-cta">
+      <a href="https://app.tadkatech.in" class="btn btn-ghost" style="padding:9px 20px;font-size:14px">Sign in</a>
+      <a href="https://wa.me/917042416189?text=Hi%2C%20I%27d%20like%20to%20learn%20more%20about%20TadkaTech" target="_blank" rel="noopener" class="btn btn-primary" style="padding:9px 20px;font-size:14px">Get Started →</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════════════════ HERO ══ -->
+<section class="hero">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+
+  <div class="hero-eyebrow">
+    <span class="tag">&#9889; Full-Stack Restaurant ERP</span>
+  </div>
+
+  <h1 class="hero-title">
+    Run your restaurant<br>
+    <span class="accent">end-to-end.</span>
+  </h1>
+
+  <p class="hero-sub">
+    One platform, five purpose-built apps — back-office, waiter, kitchen, rider and a customer self-ordering app. Orders, KDS, inventory, billing, delivery, analytics and WhatsApp, all in real time.
+  </p>
+
+  <div class="hero-actions">
+    <a href="https://wa.me/917042416189?text=Hi%2C%20I%27d%20like%20to%20learn%20more%20about%20TadkaTech" target="_blank" rel="noopener" class="btn btn-primary" style="padding:14px 32px;font-size:16px">Talk to us →</a>
+    <a href="#features" class="btn btn-ghost" style="padding:14px 32px;font-size:16px">Explore Features</a>
+  </div>
+  <p class="hero-note">Built for Indian restaurants &nbsp;·&nbsp; GST-ready &nbsp;·&nbsp; Runs on any device, no hardware needed</p>
+
+  <!-- 3D Dashboard Mockup -->
+  <div class="hero-mockup-wrap">
+    <div class="hero-mockup">
+      <!-- Browser Bar -->
+      <div class="browser-bar">
+        <div class="browser-dots">
+          <div class="browser-dot"></div>
+          <div class="browser-dot"></div>
+          <div class="browser-dot"></div>
+        </div>
+        <div class="browser-url">app.tadkatech.in/rajdhani-kitchen/dashboard</div>
+      </div>
+      <!-- Dashboard SVG -->
+      <svg viewBox="0 0 920 520" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;background:#fafaf9">
+        <!-- Sidebar -->
+        <rect width="200" height="520" fill="#1c1917"/>
+        <rect x="16" y="18" width="30" height="30" rx="6" fill="#f59e0b"/>
+        <text x="31" y="38" text-anchor="middle" fill="#0a0b0f" font-family="serif" font-size="17" font-weight="900">R</text>
+        <text x="55" y="30" fill="#fff" font-family="Inter,sans-serif" font-size="11" font-weight="700">Rajdhani Kitchen</text>
+        <text x="55" y="43" fill="#a8a29e" font-family="Inter,sans-serif" font-size="9.5">Restaurant Portal</text>
+        <!-- Nav items -->
+        <rect x="12" y="68" width="176" height="30" rx="6" fill="#f59e0b" fill-opacity=".15"/>
+        <text x="36" y="88" fill="#f59e0b" font-family="Inter,sans-serif" font-size="12" font-weight="600">⚡ Dashboard</text>
+        <text x="36" y="118" fill="#a8a29e" font-family="Inter,sans-serif" font-size="12">📋 Orders</text>
+        <text x="36" y="144" fill="#a8a29e" font-family="Inter,sans-serif" font-size="12">🪑 Tables</text>
+        <text x="36" y="170" fill="#a8a29e" font-family="Inter,sans-serif" font-size="12">👨‍🍳 KDS</text>
+        <text x="36" y="196" fill="#a8a29e" font-family="Inter,sans-serif" font-size="12">📦 Inventory</text>
+        <text x="36" y="222" fill="#a8a29e" font-family="Inter,sans-serif" font-size="12">💸 Billing</text>
+        <text x="36" y="248" fill="#a8a29e" font-family="Inter,sans-serif" font-size="12">👥 Staff</text>
+        <text x="36" y="274" fill="#a8a29e" font-family="Inter,sans-serif" font-size="12">📊 Analytics</text>
+        <text x="36" y="300" fill="#a8a29e" font-family="Inter,sans-serif" font-size="12">🛵 Delivery</text>
+        <text x="36" y="326" fill="#a8a29e" font-family="Inter,sans-serif" font-size="12">📅 Reservations</text>
+        <!-- Live badge -->
+        <circle cx="24" cy="480" r="4" fill="#22c55e"/>
+        <text x="32" y="484" fill="#a8a29e" font-family="Inter,sans-serif" font-size="10">Live &amp; connected</text>
+
+        <!-- Main content -->
+        <rect x="200" width="720" height="520" fill="#fafaf9"/>
+        <!-- Header -->
+        <rect x="200" y="0" width="720" height="52" fill="#fff" stroke="#e7e5e4" stroke-width="1"/>
+        <text x="220" y="30" fill="#111827" font-family="Inter,sans-serif" font-size="16" font-weight="700">Dashboard</text>
+        <text x="220" y="44" fill="#6b7280" font-family="Inter,sans-serif" font-size="10">Friday, 2 May 2025</text>
+        <rect x="720" y="12" width="90" height="28" rx="6" fill="#f59e0b"/>
+        <text x="765" y="31" fill="#0a0b0f" font-family="Inter,sans-serif" font-size="11" font-weight="700" text-anchor="middle">+ New Order</text>
+        <!-- Stat cards -->
+        <rect x="216" y="64" width="160" height="80" rx="8" fill="#fff" stroke="#e7e5e4" stroke-width="1"/>
+        <text x="228" y="85" fill="#6b7280" font-family="Inter,sans-serif" font-size="10">Today's Revenue</text>
+        <text x="228" y="112" fill="#111827" font-family="Inter,sans-serif" font-size="20" font-weight="800">₹18,420</text>
+        <text x="228" y="130" fill="#22c55e" font-family="Inter,sans-serif" font-size="10" font-weight="600">▲ 12% vs yesterday</text>
+
+        <rect x="390" y="64" width="160" height="80" rx="8" fill="#fff" stroke="#e7e5e4" stroke-width="1"/>
+        <text x="402" y="85" fill="#6b7280" font-family="Inter,sans-serif" font-size="10">Active Orders</text>
+        <text x="402" y="112" fill="#111827" font-family="Inter,sans-serif" font-size="20" font-weight="800">14</text>
+        <text x="402" y="130" fill="#f59e0b" font-family="Inter,sans-serif" font-size="10" font-weight="600">6 in kitchen</text>
+
+        <rect x="564" y="64" width="160" height="80" rx="8" fill="#fff" stroke="#e7e5e4" stroke-width="1"/>
+        <text x="576" y="85" fill="#6b7280" font-family="Inter,sans-serif" font-size="10">Tables Occupied</text>
+        <text x="576" y="112" fill="#111827" font-family="Inter,sans-serif" font-size="20" font-weight="800">8 / 12</text>
+        <text x="576" y="130" fill="#6b7280" font-family="Inter,sans-serif" font-size="10">67% occupancy</text>
+
+        <rect x="738" y="64" width="164" height="80" rx="8" fill="#fff" stroke="#e7e5e4" stroke-width="1"/>
+        <text x="750" y="85" fill="#6b7280" font-family="Inter,sans-serif" font-size="10">Avg Order Value</text>
+        <text x="750" y="112" fill="#111827" font-family="Inter,sans-serif" font-size="20" font-weight="800">₹1,316</text>
+        <text x="750" y="130" fill="#22c55e" font-family="Inter,sans-serif" font-size="10" font-weight="600">▲ 8% vs last week</text>
+
+        <!-- Revenue chart -->
+        <rect x="216" y="158" width="460" height="180" rx="8" fill="#fff" stroke="#e7e5e4" stroke-width="1"/>
+        <text x="228" y="177" fill="#111827" font-family="Inter,sans-serif" font-size="12" font-weight="700">Revenue — Last 7 Days</text>
+        <!-- Chart bars -->
+        <g transform="translate(228,195)">
+          <rect x="0"   y="92" width="42" height="48" rx="3" fill="#f59e0b" fill-opacity=".3"/>
+          <rect x="58"  y="72" width="42" height="68" rx="3" fill="#f59e0b" fill-opacity=".4"/>
+          <rect x="116" y="54" width="42" height="86" rx="3" fill="#f59e0b" fill-opacity=".5"/>
+          <rect x="174" y="40" width="42" height="100" rx="3" fill="#f59e0b" fill-opacity=".6"/>
+          <rect x="232" y="30" width="42" height="110" rx="3" fill="#f59e0b" fill-opacity=".7"/>
+          <rect x="290" y="20" width="42" height="120" rx="3" fill="#f59e0b" fill-opacity=".85"/>
+          <rect x="348" y="10" width="42" height="130" rx="3" fill="#f59e0b"/>
+          <text x="21" y="152" text-anchor="middle" fill="#6b7280" font-family="Inter,sans-serif" font-size="9">Mon</text>
+          <text x="79" y="152" text-anchor="middle" fill="#6b7280" font-family="Inter,sans-serif" font-size="9">Tue</text>
+          <text x="137" y="152" text-anchor="middle" fill="#6b7280" font-family="Inter,sans-serif" font-size="9">Wed</text>
+          <text x="195" y="152" text-anchor="middle" fill="#6b7280" font-family="Inter,sans-serif" font-size="9">Thu</text>
+          <text x="253" y="152" text-anchor="middle" fill="#6b7280" font-family="Inter,sans-serif" font-size="9">Fri</text>
+          <text x="311" y="152" text-anchor="middle" fill="#6b7280" font-family="Inter,sans-serif" font-size="9">Sat</text>
+          <text x="369" y="152" text-anchor="middle" fill="#f59e0b" font-family="Inter,sans-serif" font-size="9" font-weight="700">Sun</text>
+        </g>
+
+        <!-- Live orders list -->
+        <rect x="690" y="158" width="210" height="180" rx="8" fill="#fff" stroke="#e7e5e4" stroke-width="1"/>
+        <text x="702" y="177" fill="#111827" font-family="Inter,sans-serif" font-size="12" font-weight="700">Live Orders</text>
+        <circle cx="790" cy="173" r="4" fill="#22c55e"/>
+        <!-- order rows -->
+        <line x1="690" y1="186" x2="900" y2="186" stroke="#e7e5e4" stroke-width="1"/>
+        <text x="702" y="203" fill="#111827" font-family="Inter,sans-serif" font-size="11" font-weight="700">#1042</text>
+        <text x="742" y="203" fill="#6b7280" font-family="Inter,sans-serif" font-size="10">Table 4 · Dine-in</text>
+        <rect x="840" y="193" width="48" height="16" rx="4" fill="#fef3c7"/>
+        <text x="864" y="205" text-anchor="middle" fill="#92400e" font-family="Inter,sans-serif" font-size="9" font-weight="700">Preparing</text>
+
+        <line x1="690" y1="215" x2="900" y2="215" stroke="#f5f5f4" stroke-width="1"/>
+        <text x="702" y="230" fill="#111827" font-family="Inter,sans-serif" font-size="11" font-weight="700">#1041</text>
+        <text x="742" y="230" fill="#6b7280" font-family="Inter,sans-serif" font-size="10">Table 7 · Dine-in</text>
+        <rect x="840" y="220" width="48" height="16" rx="4" fill="#dcfce7"/>
+        <text x="864" y="232" text-anchor="middle" fill="#166534" font-family="Inter,sans-serif" font-size="9" font-weight="700">Ready</text>
+
+        <line x1="690" y1="242" x2="900" y2="242" stroke="#f5f5f4" stroke-width="1"/>
+        <text x="702" y="257" fill="#111827" font-family="Inter,sans-serif" font-size="11" font-weight="700">#1040</text>
+        <text x="742" y="257" fill="#6b7280" font-family="Inter,sans-serif" font-size="10">Zomato · Delivery</text>
+        <rect x="840" y="247" width="48" height="16" rx="4" fill="#ede9fe"/>
+        <text x="864" y="259" text-anchor="middle" fill="#4c1d95" font-family="Inter,sans-serif" font-size="9" font-weight="700">Accepted</text>
+
+        <line x1="690" y1="269" x2="900" y2="269" stroke="#f5f5f4" stroke-width="1"/>
+        <text x="702" y="284" fill="#111827" font-family="Inter,sans-serif" font-size="11" font-weight="700">#1039</text>
+        <text x="742" y="284" fill="#6b7280" font-family="Inter,sans-serif" font-size="10">Table 2 · Dine-in</text>
+        <rect x="840" y="274" width="48" height="16" rx="4" fill="#fee2e2"/>
+        <text x="864" y="286" text-anchor="middle" fill="#991b1b" font-family="Inter,sans-serif" font-size="9" font-weight="700">New</text>
+
+        <line x1="690" y1="296" x2="900" y2="296" stroke="#f5f5f4" stroke-width="1"/>
+        <text x="702" y="311" fill="#111827" font-family="Inter,sans-serif" font-size="11" font-weight="700">#1038</text>
+        <text x="742" y="311" fill="#6b7280" font-family="Inter,sans-serif" font-size="10">Takeaway</text>
+        <rect x="840" y="301" width="48" height="16" rx="4" fill="#dcfce7"/>
+        <text x="864" y="313" text-anchor="middle" fill="#166534" font-family="Inter,sans-serif" font-size="9" font-weight="700">Served</text>
+
+        <!-- Bottom section: table grid + alerts -->
+        <rect x="216" y="350" width="220" height="152" rx="8" fill="#fff" stroke="#e7e5e4" stroke-width="1"/>
+        <text x="228" y="368" fill="#111827" font-family="Inter,sans-serif" font-size="12" font-weight="700">Floor View</text>
+        <!-- Table grid -->
+        <g transform="translate(228, 376)">
+          <rect x="0" y="0" width="44" height="30" rx="5" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.5"/>
+          <text x="22" y="20" text-anchor="middle" fill="#92400e" font-size="11" font-weight="700" font-family="Inter,sans-serif">T1</text>
+          <rect x="52" y="0" width="44" height="30" rx="5" fill="#fee2e2" stroke="#ef4444" stroke-width="1.5"/>
+          <text x="74" y="20" text-anchor="middle" fill="#991b1b" font-size="11" font-weight="700" font-family="Inter,sans-serif">T2</text>
+          <rect x="104" y="0" width="44" height="30" rx="5" fill="#dcfce7" stroke="#22c55e" stroke-width="1.5"/>
+          <text x="126" y="20" text-anchor="middle" fill="#166534" font-size="11" font-weight="700" font-family="Inter,sans-serif">T3</text>
+          <rect x="0" y="38" width="44" height="30" rx="5" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.5"/>
+          <text x="22" y="58" text-anchor="middle" fill="#92400e" font-size="11" font-weight="700" font-family="Inter,sans-serif">T4</text>
+          <rect x="52" y="38" width="44" height="30" rx="5" fill="#f5f5f4" stroke="#d6d3d1" stroke-width="1"/>
+          <text x="74" y="58" text-anchor="middle" fill="#9ca3af" font-size="11" font-weight="700" font-family="Inter,sans-serif">T5</text>
+          <rect x="104" y="38" width="44" height="30" rx="5" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.5"/>
+          <text x="126" y="58" text-anchor="middle" fill="#92400e" font-size="11" font-weight="700" font-family="Inter,sans-serif">T6</text>
+          <rect x="0" y="76" width="44" height="30" rx="5" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.5"/>
+          <text x="22" y="96" text-anchor="middle" fill="#92400e" font-size="11" font-weight="700" font-family="Inter,sans-serif">T7</text>
+          <rect x="52" y="76" width="44" height="30" rx="5" fill="#f5f5f4" stroke="#d6d3d1" stroke-width="1"/>
+          <text x="74" y="96" text-anchor="middle" fill="#9ca3af" font-size="11" font-weight="700" font-family="Inter,sans-serif">T8</text>
+          <rect x="104" y="76" width="44" height="30" rx="5" fill="#dcfce7" stroke="#22c55e" stroke-width="1.5"/>
+          <text x="126" y="96" text-anchor="middle" fill="#166534" font-size="11" font-weight="700" font-family="Inter,sans-serif">T9</text>
+        </g>
+
+        <!-- Reservations widget -->
+        <rect x="450" y="350" width="226" height="152" rx="8" fill="#fff" stroke="#e7e5e4" stroke-width="1"/>
+        <text x="462" y="368" fill="#111827" font-family="Inter,sans-serif" font-size="12" font-weight="700">Today's Reservations</text>
+        <line x1="450" y1="376" x2="676" y2="376" stroke="#f5f5f4" stroke-width="1"/>
+        <text x="462" y="394" fill="#f59e0b" font-family="Inter,sans-serif" font-size="11" font-weight="700">7:00 PM</text>
+        <text x="510" y="394" fill="#111827" font-family="Inter,sans-serif" font-size="11">Sharma Party · 4 pax</text>
+        <line x1="450" y1="402" x2="676" y2="402" stroke="#f5f5f4" stroke-width="1"/>
+        <text x="462" y="420" fill="#f59e0b" font-family="Inter,sans-serif" font-size="11" font-weight="700">7:30 PM</text>
+        <text x="510" y="420" fill="#111827" font-family="Inter,sans-serif" font-size="11">Mehta · 2 pax</text>
+        <line x1="450" y1="428" x2="676" y2="428" stroke="#f5f5f4" stroke-width="1"/>
+        <text x="462" y="446" fill="#f59e0b" font-family="Inter,sans-serif" font-size="11" font-weight="700">8:00 PM</text>
+        <text x="510" y="446" fill="#111827" font-family="Inter,sans-serif" font-size="11">Singh Family · 6 pax</text>
+        <line x1="450" y1="454" x2="676" y2="454" stroke="#f5f5f4" stroke-width="1"/>
+        <text x="462" y="472" fill="#f59e0b" font-family="Inter,sans-serif" font-size="11" font-weight="700">8:30 PM</text>
+        <text x="510" y="472" fill="#111827" font-family="Inter,sans-serif" font-size="11">Gupta · 3 pax</text>
+
+        <!-- Alerts widget -->
+        <rect x="690" y="350" width="210" height="152" rx="8" fill="#fff" stroke="#e7e5e4" stroke-width="1"/>
+        <text x="702" y="368" fill="#111827" font-family="Inter,sans-serif" font-size="12" font-weight="700">⚠ Alerts</text>
+        <line x1="690" y1="376" x2="900" y2="376" stroke="#f5f5f4" stroke-width="1"/>
+        <text x="702" y="394" fill="#ef4444" font-family="Inter,sans-serif" font-size="11">🔴 Tomatoes — low stock</text>
+        <text x="702" y="413" fill="#f59e0b" font-family="Inter,sans-serif" font-size="11">🟡 Table 2 waiting 18 min</text>
+        <text x="702" y="432" fill="#ef4444" font-family="Inter,sans-serif" font-size="11">🔴 #1039 payment pending</text>
+        <text x="702" y="451" fill="#6b7280" font-family="Inter,sans-serif" font-size="11">ℹ Staff clock-in: 8 of 10</text>
+        <text x="702" y="470" fill="#6b7280" font-family="Inter,sans-serif" font-size="11">ℹ 3 reservations tonight</text>
+      </svg>
+    </div>
+    <div class="hero-mockup-shadow"></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ TRUST ══ -->
+<section class="trust">
+  <div class="container">
+    <div class="trust-inner">
+      <span class="trust-label">Built for modern restaurants</span>
+      <div class="trust-divider"></div>
+      <div class="trust-stat"><span class="trust-stat-num">15+</span><span class="trust-stat-label">Modules</span></div>
+      <div class="trust-stat"><span class="trust-stat-num">50+</span><span class="trust-stat-label">Atomic Permissions</span></div>
+      <div class="trust-stat"><span class="trust-stat-num">7</span><span class="trust-stat-label">Staff Roles</span></div>
+      <div class="trust-stat"><span class="trust-stat-num">Real‑time</span><span class="trust-stat-label">KDS via WebSockets</span></div>
+      <div class="trust-stat"><span class="trust-stat-num">Multi-tenant</span><span class="trust-stat-label">Schema isolation</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ FEATURES ══ -->
+<section class="features" id="features">
+  <div class="container">
+    <div class="section-label reveal"><span class="tag">Core Modules</span></div>
+    <h2 class="section-title reveal reveal-delay-1">Everything your restaurant needs</h2>
+    <p class="section-sub reveal reveal-delay-2">From the moment an order is placed to the final bill — and every slice of analytics in between.</p>
+
+    <div class="feature-grid reveal reveal-delay-3">
+
+      <div class="feature-card">
+        <div class="feature-icon">📋</div>
+        <div class="feature-name">Order Management</div>
+        <div class="feature-desc">Dine-in, takeaway, QR self-order, and third-party delivery (Zomato, Swiggy) in one unified queue. Live status updates, item notes, and one-tap billing.</div>
+        <div class="feature-pills"><span class="pill">Dine-in</span><span class="pill">Takeaway</span><span class="pill">QR self-order</span><span class="pill">Delivery</span><span class="pill">Status flow</span></div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(34,197,94,0.1);border-color:rgba(34,197,94,0.2)">👨‍🍳</div>
+        <div class="feature-name">Kitchen Display System</div>
+        <div class="feature-desc">Real-time WebSocket ticket board. Color-coded by elapsed time — green to red as the clock ticks. Section filters and item-level notes.</div>
+        <div class="feature-pills"><span class="pill">WebSockets</span><span class="pill">Color-coded</span><span class="pill">Section filters</span><span class="pill">Notes</span></div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon indigo">📦</div>
+        <div class="feature-name">Inventory & Stock</div>
+        <div class="feature-desc">Track ingredients in real-time. Auto-deduct on orders. Purchase orders, GRN, waste logging, stock-take, and low-stock alerts.</div>
+        <div class="feature-pills"><span class="pill">Auto-deduction</span><span class="pill">Purchase Orders</span><span class="pill">GRN</span><span class="pill">Waste log</span></div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(59,130,246,0.1);border-color:rgba(59,130,246,0.2)">💸</div>
+        <div class="feature-name">Billing & Payments</div>
+        <div class="feature-desc">Generate itemized bills with GST. Accept cash, card, UPI, and Razorpay. Split bills, apply discounts, and print thermal receipts.</div>
+        <div class="feature-pills"><span class="pill">GST</span><span class="pill">Razorpay</span><span class="pill">UPI</span><span class="pill">Thermal print</span></div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(168,85,247,0.1);border-color:rgba(168,85,247,0.2)">📊</div>
+        <div class="feature-name">Analytics & Reports</div>
+        <div class="feature-desc">Revenue trends, top-selling items, table turnover, staff performance, and delivery partner breakdowns. Exportable reports.</div>
+        <div class="feature-pills"><span class="pill">Revenue charts</span><span class="pill">Top items</span><span class="pill">Table analytics</span></div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(239,68,68,0.1);border-color:rgba(239,68,68,0.2)">💬</div>
+        <div class="feature-name">WhatsApp Notifications</div>
+        <div class="feature-desc">Auto-send order confirmations, reservation reminders, and bill receipts over WhatsApp via Baileys. Full message log per customer.</div>
+        <div class="feature-pills"><span class="pill">Baileys</span><span class="pill">Order alerts</span><span class="pill">Reservation SMS</span></div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🪑</div>
+        <div class="feature-name">Table Management</div>
+        <div class="feature-desc">Visual floor plan with real-time status (Free / Occupied / Reserved). QR code generation per table for customer self-ordering.</div>
+        <div class="feature-pills"><span class="pill">Floor plan</span><span class="pill">QR ordering</span><span class="pill">Live status</span></div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon indigo">👥</div>
+        <div class="feature-name">Staff & HR</div>
+        <div class="feature-desc">Manage staff profiles, shifts, attendance, and payroll in one place. Role-based access — from owner down to delivery rider.</div>
+        <div class="feature-pills"><span class="pill">Shifts</span><span class="pill">Attendance</span><span class="pill">Payroll</span><span class="pill">RBAC</span></div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(34,197,94,0.1);border-color:rgba(34,197,94,0.2)">👤</div>
+        <div class="feature-name">Customer CRM</div>
+        <div class="feature-desc">Full customer profiles with order history, loyalty points, and WhatsApp engagement. Identify your regulars and reward them.</div>
+        <div class="feature-pills"><span class="pill">Order history</span><span class="pill">Loyalty</span><span class="pill">WhatsApp CRM</span></div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(168,85,247,0.1);border-color:rgba(168,85,247,0.2)">📅</div>
+        <div class="feature-name">Reservations</div>
+        <div class="feature-desc">Take and manage table bookings with party size, time slot, and special requests. Auto WhatsApp reminders and one-tap seating against your live floor plan.</div>
+        <div class="feature-pills"><span class="pill">Table booking</span><span class="pill">Slot management</span><span class="pill">Reminders</span><span class="pill">Auto-seat</span></div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(56,189,248,0.1);border-color:rgba(56,189,248,0.2)">🛵</div>
+        <div class="feature-name">Delivery & Rider App</div>
+        <div class="feature-desc">A dedicated mobile app for your riders. Assign deliveries, track them live on the customer's order page, and settle rider earnings — including customer-offered tips.</div>
+        <div class="feature-pills"><span class="pill">Rider app</span><span class="pill">Live tracking</span><span class="pill">Earnings</span><span class="pill">Tips</span></div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(34,197,94,0.1);border-color:rgba(34,197,94,0.2)">📱</div>
+        <div class="feature-name">Customer Self-Ordering</div>
+        <div class="feature-desc">Diners scan a QR, browse your live menu, and order from their phone — no app install. They watch their order move from kitchen to table in real time, right down to the rider.</div>
+        <div class="feature-pills"><span class="pill">QR menu</span><span class="pill">PWA</span><span class="pill">Live order tracking</span><span class="pill">No install</span></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ KDS SHOWCASE ══ -->
+<section class="split-section" id="modules">
+  <div class="container">
+    <div class="split-inner">
+      <div class="split-text reveal">
+        <span class="tag green">Real-time</span>
+        <h3 class="split-title">Kitchen Display System that actually works</h3>
+        <p class="split-desc">Tickets arrive the instant an order is placed — no polling, no refresh. Your kitchen team sees color-coded urgency, item notes, and can bump tickets with a single tap.</p>
+        <div class="check-list">
+          <div class="check-item">Live WebSocket push — zero latency from POS to kitchen screen</div>
+          <div class="check-item">Color shifts green → yellow → red based on elapsed time</div>
+          <div class="check-item">Section filters: Main Kitchen, Tandoor, Desserts, Bar</div>
+          <div class="check-item">Order-level and item-level notes displayed inline</div>
+          <div class="check-item">One-tap "Ready" bump with automatic waiter notification</div>
+        </div>
+      </div>
+      <div class="split-visual reveal reveal-delay-2">
+        <!-- Browser chrome -->
+        <div class="browser-bar">
+          <div class="browser-dots"><div class="browser-dot"></div><div class="browser-dot"></div><div class="browser-dot"></div></div>
+          <div class="browser-url">app.tadkatech.in/rajdhani-kitchen/kds</div>
+        </div>
+        <!-- KDS SVG -->
+        <svg viewBox="0 0 580 420" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;background:#111827">
+          <!-- Header -->
+          <rect width="580" height="48" fill="#1f2937"/>
+          <circle cx="16" cy="24" r="5" fill="#22c55e"/>
+          <text x="26" y="28" fill="#f9fafb" font-family="Inter,sans-serif" font-size="13" font-weight="700">Kitchen Display</text>
+          <text x="26" y="40" fill="#6b7280" font-family="Inter,sans-serif" font-size="9">● Live — 6 active tickets</text>
+          <!-- Section filters -->
+          <rect x="220" y="12" width="60" height="22" rx="11" fill="#f59e0b"/>
+          <text x="250" y="27" text-anchor="middle" fill="#0a0b0f" font-family="Inter,sans-serif" font-size="10" font-weight="700">All</text>
+          <rect x="288" y="12" width="70" height="22" rx="11" fill="#374151"/>
+          <text x="323" y="27" text-anchor="middle" fill="#9ca3af" font-family="Inter,sans-serif" font-size="10">Main Kitchen</text>
+          <rect x="366" y="12" width="58" height="22" rx="11" fill="#374151"/>
+          <text x="395" y="27" text-anchor="middle" fill="#9ca3af" font-family="Inter,sans-serif" font-size="10">Tandoor</text>
+          <rect x="432" y="12" width="44" height="22" rx="11" fill="#374151"/>
+          <text x="454" y="27" text-anchor="middle" fill="#9ca3af" font-family="Inter,sans-serif" font-size="10">Bar</text>
+
+          <!-- Ticket 1 - Green (fresh) -->
+          <rect x="10" y="58" width="170" height="170" rx="8" fill="#1f2937" stroke="#22c55e" stroke-width="2"/>
+          <rect x="10" y="58" width="170" height="30" rx="8" fill="#22c55e"/>
+          <rect x="10" y="74" width="170" height="14" fill="#22c55e"/>
+          <text x="20" y="77" fill="#fff" font-family="Inter,sans-serif" font-size="12" font-weight="800">#1042</text>
+          <text x="100" y="77" text-anchor="middle" fill="#fff" font-family="Inter,sans-serif" font-size="10">Table 4</text>
+          <text x="168" y="77" text-anchor="end" fill="#fff" font-family="Inter,sans-serif" font-size="11" font-weight="700">2 min</text>
+          <text x="20" y="104" fill="#9ca3af" font-family="Inter,sans-serif" font-size="9" font-weight="700">ORDER NOTE</text>
+          <rect x="20" y="108" width="150" height="18" rx="4" fill="#374151"/>
+          <text x="28" y="120" fill="#f59e0b" font-family="Inter,sans-serif" font-size="9">No onion, extra spicy</text>
+          <text x="20" y="140" fill="#f9fafb" font-family="Inter,sans-serif" font-size="11" font-weight="600">2× Butter Chicken</text>
+          <text x="20" y="156" fill="#f9fafb" font-family="Inter,sans-serif" font-size="11" font-weight="600">1× Garlic Naan</text>
+          <text x="20" y="172" fill="#f9fafb" font-family="Inter,sans-serif" font-size="11" font-weight="600">1× Dal Makhani</text>
+          <rect x="156" y="164" width="18" height="18" rx="4" fill="#374151"/>
+          <text x="165" y="177" text-anchor="middle" fill="#9ca3af" font-family="Inter,sans-serif" font-size="12">✓</text>
+          <rect x="20" y="196" width="150" height="24" rx="6" fill="#22c55e"/>
+          <text x="95" y="213" text-anchor="middle" fill="#fff" font-family="Inter,sans-serif" font-size="11" font-weight="700">Mark Ready</text>
+
+          <!-- Ticket 2 - Yellow (getting late) -->
+          <rect x="196" y="58" width="170" height="170" rx="8" fill="#1f2937" stroke="#f59e0b" stroke-width="2"/>
+          <rect x="196" y="58" width="170" height="30" rx="8" fill="#f59e0b"/>
+          <rect x="196" y="74" width="170" height="14" fill="#f59e0b"/>
+          <text x="206" y="77" fill="#0a0b0f" font-family="Inter,sans-serif" font-size="12" font-weight="800">#1041</text>
+          <text x="285" y="77" text-anchor="middle" fill="#0a0b0f" font-family="Inter,sans-serif" font-size="10">Table 7</text>
+          <text x="354" y="77" text-anchor="end" fill="#0a0b0f" font-family="Inter,sans-serif" font-size="11" font-weight="700">8 min</text>
+          <text x="206" y="108" fill="#f9fafb" font-family="Inter,sans-serif" font-size="11" font-weight="600">1× Paneer Tikka</text>
+          <text x="206" y="124" fill="#f9fafb" font-family="Inter,sans-serif" font-size="11" font-weight="600">3× Roti</text>
+          <text x="206" y="142" fill="#9ca3af" font-family="Inter,sans-serif" font-size="9">ITEM NOTE</text>
+          <rect x="206" y="146" width="150" height="16" rx="3" fill="#374151"/>
+          <text x="214" y="158" fill="#fbbf24" font-family="Inter,sans-serif" font-size="9">Less oil for Paneer</text>
+          <text x="206" y="178" fill="#f9fafb" font-family="Inter,sans-serif" font-size="11" font-weight="600">2× Lassi</text>
+          <rect x="206" y="196" width="150" height="24" rx="6" fill="#f59e0b"/>
+          <text x="281" y="213" text-anchor="middle" fill="#0a0b0f" font-family="Inter,sans-serif" font-size="11" font-weight="700">Mark Ready</text>
+
+          <!-- Ticket 3 - Red (overdue) -->
+          <rect x="382" y="58" width="170" height="170" rx="8" fill="#1f2937" stroke="#ef4444" stroke-width="2"/>
+          <rect x="382" y="58" width="170" height="30" rx="8" fill="#ef4444"/>
+          <rect x="382" y="74" width="170" height="14" fill="#ef4444"/>
+          <text x="392" y="77" fill="#fff" font-family="Inter,sans-serif" font-size="12" font-weight="800">#1039</text>
+          <text x="471" y="77" text-anchor="middle" fill="#fff" font-family="Inter,sans-serif" font-size="10">Table 2</text>
+          <text x="540" y="77" text-anchor="end" fill="#fff" font-family="Inter,sans-serif" font-size="11" font-weight="700">18 min ⚠</text>
+          <text x="392" y="108" fill="#f9fafb" font-family="Inter,sans-serif" font-size="11" font-weight="600">2× Biryani</text>
+          <text x="392" y="124" fill="#f9fafb" font-family="Inter,sans-serif" font-size="11" font-weight="600">1× Raita</text>
+          <text x="392" y="140" fill="#f9fafb" font-family="Inter,sans-serif" font-size="11" font-weight="600">1× Gulab Jamun</text>
+          <text x="392" y="156" fill="#f9fafb" font-family="Inter,sans-serif" font-size="11" font-weight="600">2× Water</text>
+          <rect x="392" y="196" width="150" height="24" rx="6" fill="#ef4444"/>
+          <text x="467" y="213" text-anchor="middle" fill="#fff" font-family="Inter,sans-serif" font-size="11" font-weight="700">Mark Ready</text>
+
+          <!-- Second row tickets -->
+          <rect x="10" y="238" width="170" height="140" rx="8" fill="#1f2937" stroke="#22c55e" stroke-width="1.5"/>
+          <rect x="10" y="238" width="170" height="30" rx="8" fill="#22c55e" fill-opacity=".8"/>
+          <rect x="10" y="254" width="170" height="14" fill="#22c55e" fill-opacity=".8"/>
+          <text x="20" y="257" fill="#fff" font-family="Inter,sans-serif" font-size="12" font-weight="800">#1044</text>
+          <text x="100" y="257" text-anchor="middle" fill="#fff" font-family="Inter,sans-serif" font-size="10">Takeaway</text>
+          <text x="168" y="257" text-anchor="end" fill="#fff" font-family="Inter,sans-serif" font-size="11" font-weight="700">1 min</text>
+          <text x="20" y="286" fill="#f9fafb" font-family="Inter,sans-serif" font-size="11">1× Samosa (x2)</text>
+          <text x="20" y="302" fill="#f9fafb" font-family="Inter,sans-serif" font-size="11">1× Chai</text>
+          <rect x="20" y="352" width="150" height="22" rx="5" fill="#22c55e" fill-opacity=".8"/>
+          <text x="95" y="367" text-anchor="middle" fill="#fff" font-family="Inter,sans-serif" font-size="11" font-weight="700">Mark Ready</text>
+
+          <rect x="196" y="238" width="170" height="140" rx="8" fill="#1f2937" stroke="#f59e0b" stroke-width="1.5"/>
+          <rect x="196" y="238" width="170" height="30" rx="8" fill="#f59e0b" fill-opacity=".8"/>
+          <rect x="196" y="254" width="170" height="14" fill="#f59e0b" fill-opacity=".8"/>
+          <text x="206" y="257" fill="#0a0b0f" font-family="Inter,sans-serif" font-size="12" font-weight="800">#1043</text>
+          <text x="285" y="257" text-anchor="middle" fill="#0a0b0f" font-family="Inter,sans-serif" font-size="10">Table 11</text>
+          <text x="354" y="257" text-anchor="end" fill="#0a0b0f" font-family="Inter,sans-serif" font-size="11" font-weight="700">5 min</text>
+          <text x="206" y="286" fill="#f9fafb" font-family="Inter,sans-serif" font-size="11">2× Tandoori Chicken</text>
+          <text x="206" y="302" fill="#f9fafb" font-family="Inter,sans-serif" font-size="11">4× Butter Naan</text>
+          <rect x="206" y="352" width="150" height="22" rx="5" fill="#f59e0b" fill-opacity=".8"/>
+          <text x="281" y="367" text-anchor="middle" fill="#0a0b0f" font-family="Inter,sans-serif" font-size="11" font-weight="700">Mark Ready</text>
+
+          <rect x="382" y="238" width="170" height="140" rx="8" fill="#1f2937" stroke="#6366f1" stroke-width="1.5"/>
+          <rect x="382" y="238" width="170" height="30" rx="8" fill="#6366f1" fill-opacity=".8"/>
+          <rect x="382" y="254" width="170" height="14" fill="#6366f1" fill-opacity=".8"/>
+          <text x="392" y="257" fill="#fff" font-family="Inter,sans-serif" font-size="12" font-weight="800">#1045</text>
+          <text x="471" y="257" text-anchor="middle" fill="#fff" font-family="Inter,sans-serif" font-size="10">Delivery</text>
+          <text x="540" y="257" text-anchor="end" fill="#fff" font-family="Inter,sans-serif" font-size="11" font-weight="700">New</text>
+          <text x="392" y="286" fill="#f9fafb" font-family="Inter,sans-serif" font-size="11">1× Veg Thali</text>
+          <text x="392" y="302" fill="#f9fafb" font-family="Inter,sans-serif" font-size="11">1× Kheer</text>
+          <rect x="392" y="352" width="150" height="22" rx="5" fill="#6366f1" fill-opacity=".8"/>
+          <text x="467" y="367" text-anchor="middle" fill="#fff" font-family="Inter,sans-serif" font-size="11" font-weight="700">Start Preparing</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ INVENTORY ══ -->
+<section class="split-section" style="padding-top:20px">
+  <div class="container">
+    <div class="split-inner reverse">
+      <div class="split-text reveal">
+        <span class="tag indigo">Smart Inventory</span>
+        <h3 class="split-title">Stock tracking that closes the loop</h3>
+        <p class="split-desc">Every time an order is prepared, ingredients are automatically deducted. Raise purchase orders, receive GRNs, log wastage — and get alerted before you run out.</p>
+        <div class="check-list">
+          <div class="check-item">Auto-deduction from recipes on order confirmation</div>
+          <div class="check-item">Purchase orders → GRN workflow with supplier tracking</div>
+          <div class="check-item">Waste logging with reason codes and cost impact</div>
+          <div class="check-item">Stock-take with variance reporting</div>
+          <div class="check-item">Low-stock alerts on dashboard and WhatsApp</div>
+        </div>
+      </div>
+      <div class="split-visual reveal reveal-delay-2">
+        <div class="browser-bar">
+          <div class="browser-dots"><div class="browser-dot"></div><div class="browser-dot"></div><div class="browser-dot"></div></div>
+          <div class="browser-url">app.tadkatech.in/rajdhani-kitchen/inventory</div>
+        </div>
+        <svg viewBox="0 0 580 400" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;background:#fafaf9">
+          <!-- Header -->
+          <rect width="580" height="52" fill="#fff" stroke="#e7e5e4" stroke-width="1"/>
+          <text x="16" y="28" fill="#111827" font-family="Inter,sans-serif" font-size="15" font-weight="700">Ingredients &amp; Stock</text>
+          <text x="16" y="44" fill="#6b7280" font-family="Inter,sans-serif" font-size="10">48 ingredients · 5 low stock alerts</text>
+          <rect x="400" y="12" width="80" height="28" rx="6" fill="#fff" stroke="#e7e5e4" stroke-width="1"/>
+          <text x="440" y="30" text-anchor="middle" fill="#111827" font-family="Inter,sans-serif" font-size="11" font-weight="600">+ Add Item</text>
+          <rect x="490" y="12" width="78" height="28" rx="6" fill="#f59e0b"/>
+          <text x="529" y="30" text-anchor="middle" fill="#0a0b0f" font-family="Inter,sans-serif" font-size="11" font-weight="700">+ Purchase</text>
+
+          <!-- Stats row -->
+          <rect x="10" y="62" width="130" height="60" rx="8" fill="#fff" stroke="#e7e5e4" stroke-width="1"/>
+          <text x="22" y="82" fill="#6b7280" font-family="Inter,sans-serif" font-size="9">Total Stock Value</text>
+          <text x="22" y="104" fill="#111827" font-family="Inter,sans-serif" font-size="16" font-weight="800">₹84,200</text>
+
+          <rect x="152" y="62" width="130" height="60" rx="8" fill="#fff" stroke="#e7e5e4" stroke-width="1"/>
+          <text x="164" y="82" fill="#6b7280" font-family="Inter,sans-serif" font-size="9">Low Stock Items</text>
+          <text x="164" y="104" fill="#ef4444" font-family="Inter,sans-serif" font-size="16" font-weight="800">5</text>
+
+          <rect x="294" y="62" width="130" height="60" rx="8" fill="#fff" stroke="#e7e5e4" stroke-width="1"/>
+          <text x="306" y="82" fill="#6b7280" font-family="Inter,sans-serif" font-size="9">Open POs</text>
+          <text x="306" y="104" fill="#111827" font-family="Inter,sans-serif" font-size="16" font-weight="800">3</text>
+
+          <rect x="436" y="62" width="132" height="60" rx="8" fill="#fff" stroke="#e7e5e4" stroke-width="1"/>
+          <text x="448" y="82" fill="#6b7280" font-family="Inter,sans-serif" font-size="9">Wastage This Week</text>
+          <text x="448" y="104" fill="#f59e0b" font-family="Inter,sans-serif" font-size="16" font-weight="800">₹1,240</text>
+
+          <!-- Table header -->
+          <rect x="0" y="134" width="580" height="28" fill="#f9fafb"/>
+          <text x="16" y="152" fill="#6b7280" font-family="Inter,sans-serif" font-size="10" font-weight="700">INGREDIENT</text>
+          <text x="200" y="152" fill="#6b7280" font-family="Inter,sans-serif" font-size="10" font-weight="700">CATEGORY</text>
+          <text x="310" y="152" fill="#6b7280" font-family="Inter,sans-serif" font-size="10" font-weight="700">IN STOCK</text>
+          <text x="390" y="152" fill="#6b7280" font-family="Inter,sans-serif" font-size="10" font-weight="700">MIN LEVEL</text>
+          <text x="460" y="152" fill="#6b7280" font-family="Inter,sans-serif" font-size="10" font-weight="700">STATUS</text>
+
+          <!-- Rows -->
+          <line x1="0" y1="162" x2="580" y2="162" stroke="#e7e5e4" stroke-width="1"/>
+          <text x="16" y="178" fill="#111827" font-family="Inter,sans-serif" font-size="11" font-weight="600">Chicken (Boneless)</text>
+          <text x="200" y="178" fill="#6b7280" font-family="Inter,sans-serif" font-size="11">Protein</text>
+          <text x="310" y="178" fill="#111827" font-family="Inter,sans-serif" font-size="11">12 kg</text>
+          <text x="390" y="178" fill="#6b7280" font-family="Inter,sans-serif" font-size="11">5 kg</text>
+          <rect x="456" y="168" width="52" height="16" rx="4" fill="#dcfce7"/>
+          <text x="482" y="180" text-anchor="middle" fill="#166534" font-family="Inter,sans-serif" font-size="9" font-weight="700">OK</text>
+
+          <line x1="0" y1="188" x2="580" y2="188" stroke="#f5f5f4" stroke-width="1"/>
+          <text x="16" y="204" fill="#111827" font-family="Inter,sans-serif" font-size="11" font-weight="600">Tomatoes</text>
+          <text x="200" y="204" fill="#6b7280" font-family="Inter,sans-serif" font-size="11">Vegetables</text>
+          <text x="310" y="204" fill="#ef4444" font-family="Inter,sans-serif" font-size="11" font-weight="700">0.8 kg</text>
+          <text x="390" y="204" fill="#6b7280" font-family="Inter,sans-serif" font-size="11">2 kg</text>
+          <rect x="450" y="194" width="64" height="16" rx="4" fill="#fee2e2"/>
+          <text x="482" y="206" text-anchor="middle" fill="#991b1b" font-family="Inter,sans-serif" font-size="9" font-weight="700">LOW STOCK</text>
+
+          <line x1="0" y1="214" x2="580" y2="214" stroke="#f5f5f4" stroke-width="1"/>
+          <text x="16" y="230" fill="#111827" font-family="Inter,sans-serif" font-size="11" font-weight="600">Basmati Rice</text>
+          <text x="200" y="230" fill="#6b7280" font-family="Inter,sans-serif" font-size="11">Grains</text>
+          <text x="310" y="230" fill="#111827" font-family="Inter,sans-serif" font-size="11">18 kg</text>
+          <text x="390" y="230" fill="#6b7280" font-family="Inter,sans-serif" font-size="11">10 kg</text>
+          <rect x="456" y="220" width="52" height="16" rx="4" fill="#dcfce7"/>
+          <text x="482" y="232" text-anchor="middle" fill="#166534" font-family="Inter,sans-serif" font-size="9" font-weight="700">OK</text>
+
+          <line x1="0" y1="240" x2="580" y2="240" stroke="#f5f5f4" stroke-width="1"/>
+          <text x="16" y="256" fill="#111827" font-family="Inter,sans-serif" font-size="11" font-weight="600">Paneer</text>
+          <text x="200" y="256" fill="#6b7280" font-family="Inter,sans-serif" font-size="11">Dairy</text>
+          <text x="310" y="256" fill="#f59e0b" font-family="Inter,sans-serif" font-size="11" font-weight="700">1.2 kg</text>
+          <text x="390" y="256" fill="#6b7280" font-family="Inter,sans-serif" font-size="11">1 kg</text>
+          <rect x="446" y="246" width="72" height="16" rx="4" fill="#fef3c7"/>
+          <text x="482" y="258" text-anchor="middle" fill="#92400e" font-family="Inter,sans-serif" font-size="9" font-weight="700">REORDER SOON</text>
+
+          <line x1="0" y1="266" x2="580" y2="266" stroke="#f5f5f4" stroke-width="1"/>
+          <text x="16" y="282" fill="#111827" font-family="Inter,sans-serif" font-size="11" font-weight="600">Butter</text>
+          <text x="200" y="282" fill="#6b7280" font-family="Inter,sans-serif" font-size="11">Dairy</text>
+          <text x="310" y="282" fill="#111827" font-family="Inter,sans-serif" font-size="11">3.5 kg</text>
+          <text x="390" y="282" fill="#6b7280" font-family="Inter,sans-serif" font-size="11">2 kg</text>
+          <rect x="456" y="272" width="52" height="16" rx="4" fill="#dcfce7"/>
+          <text x="482" y="284" text-anchor="middle" fill="#166534" font-family="Inter,sans-serif" font-size="9" font-weight="700">OK</text>
+
+          <line x1="0" y1="292" x2="580" y2="292" stroke="#f5f5f4" stroke-width="1"/>
+          <text x="16" y="308" fill="#111827" font-family="Inter,sans-serif" font-size="11" font-weight="600">Wheat Flour (Atta)</text>
+          <text x="200" y="308" fill="#6b7280" font-family="Inter,sans-serif" font-size="11">Grains</text>
+          <text x="310" y="308" fill="#ef4444" font-family="Inter,sans-serif" font-size="11" font-weight="700">0.5 kg</text>
+          <text x="390" y="308" fill="#6b7280" font-family="Inter,sans-serif" font-size="11">3 kg</text>
+          <rect x="450" y="298" width="64" height="16" rx="4" fill="#fee2e2"/>
+          <text x="482" y="310" text-anchor="middle" fill="#991b1b" font-family="Inter,sans-serif" font-size="9" font-weight="700">LOW STOCK</text>
+
+          <!-- Pagination -->
+          <text x="16" y="345" fill="#6b7280" font-family="Inter,sans-serif" font-size="11">Showing 1–6 of 48 ingredients</text>
+          <rect x="460" y="332" width="28" height="22" rx="4" fill="#fff" stroke="#e7e5e4" stroke-width="1"/>
+          <text x="474" y="347" text-anchor="middle" fill="#6b7280" font-family="Inter,sans-serif" font-size="11">‹</text>
+          <rect x="494" y="332" width="28" height="22" rx="4" fill="#f59e0b"/>
+          <text x="508" y="347" text-anchor="middle" fill="#0a0b0f" font-family="Inter,sans-serif" font-size="11" font-weight="700">1</text>
+          <rect x="528" y="332" width="28" height="22" rx="4" fill="#fff" stroke="#e7e5e4" stroke-width="1"/>
+          <text x="542" y="347" text-anchor="middle" fill="#6b7280" font-family="Inter,sans-serif" font-size="11">2</text>
+          <rect x="560" y="332" width="12" height="22" rx="4" fill="#fff" stroke="#e7e5e4" stroke-width="1"/>
+          <text x="566" y="347" text-anchor="middle" fill="#6b7280" font-family="Inter,sans-serif" font-size="10">›</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ ANALYTICS ══ -->
+<section class="split-section" style="padding-top:20px">
+  <div class="container">
+    <div class="split-inner">
+      <div class="split-text reveal">
+        <span class="tag" style="color:#a78bfa;background:rgba(167,139,250,0.1);border-color:rgba(167,139,250,0.25)">Analytics</span>
+        <h3 class="split-title">Data that drives better decisions</h3>
+        <p class="split-desc">Revenue trends, top-selling items, table occupancy, staff efficiency, and delivery partner performance — all in one view. Filter by date range, export at will.</p>
+        <div class="check-list">
+          <div class="check-item">Daily, weekly, and monthly revenue breakdowns</div>
+          <div class="check-item">Top 10 menu items by revenue and by volume</div>
+          <div class="check-item">Table turnover time and peak-hour heatmap</div>
+          <div class="check-item">Delivery partner breakdown (Zomato, Swiggy, own)</div>
+          <div class="check-item">Exportable PDF and CSV reports</div>
+        </div>
+      </div>
+      <div class="split-visual reveal reveal-delay-2">
+        <div class="browser-bar">
+          <div class="browser-dots"><div class="browser-dot"></div><div class="browser-dot"></div><div class="browser-dot"></div></div>
+          <div class="browser-url">app.tadkatech.in/rajdhani-kitchen/analytics</div>
+        </div>
+        <svg viewBox="0 0 580 400" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;background:#fafaf9">
+          <rect width="580" height="52" fill="#fff" stroke="#e7e5e4" stroke-width="1"/>
+          <text x="16" y="28" fill="#111827" font-family="Inter,sans-serif" font-size="15" font-weight="700">Analytics &amp; Reports</text>
+          <rect x="360" y="12" width="100" height="28" rx="6" fill="#fff" stroke="#e7e5e4" stroke-width="1"/>
+          <text x="410" y="30" text-anchor="middle" fill="#111827" font-family="Inter,sans-serif" font-size="11">Last 30 Days ▾</text>
+          <rect x="472" y="12" width="96" height="28" rx="6" fill="#6366f1"/>
+          <text x="520" y="30" text-anchor="middle" fill="#fff" font-family="Inter,sans-serif" font-size="11" font-weight="600">Export PDF</text>
+
+          <!-- KPI row -->
+          <rect x="10" y="62" width="124" height="64" rx="8" fill="#fff" stroke="#e7e5e4" stroke-width="1"/>
+          <text x="22" y="80" fill="#6b7280" font-family="Inter,sans-serif" font-size="9">Total Revenue</text>
+          <text x="22" y="104" fill="#111827" font-family="Inter,sans-serif" font-size="17" font-weight="800">₹4.2L</text>
+          <text x="22" y="118" fill="#22c55e" font-family="Inter,sans-serif" font-size="9">▲ 18% vs prev month</text>
+
+          <rect x="146" y="62" width="124" height="64" rx="8" fill="#fff" stroke="#e7e5e4" stroke-width="1"/>
+          <text x="158" y="80" fill="#6b7280" font-family="Inter,sans-serif" font-size="9">Orders</text>
+          <text x="158" y="104" fill="#111827" font-family="Inter,sans-serif" font-size="17" font-weight="800">1,284</text>
+          <text x="158" y="118" fill="#22c55e" font-family="Inter,sans-serif" font-size="9">▲ 9% vs prev month</text>
+
+          <rect x="282" y="62" width="124" height="64" rx="8" fill="#fff" stroke="#e7e5e4" stroke-width="1"/>
+          <text x="294" y="80" fill="#6b7280" font-family="Inter,sans-serif" font-size="9">Avg Order Value</text>
+          <text x="294" y="104" fill="#111827" font-family="Inter,sans-serif" font-size="17" font-weight="800">₹1,327</text>
+          <text x="294" y="118" fill="#22c55e" font-family="Inter,sans-serif" font-size="9">▲ 4% vs prev month</text>
+
+          <rect x="418" y="62" width="150" height="64" rx="8" fill="#fff" stroke="#e7e5e4" stroke-width="1"/>
+          <text x="430" y="80" fill="#6b7280" font-family="Inter,sans-serif" font-size="9">Table Occupancy</text>
+          <text x="430" y="104" fill="#111827" font-family="Inter,sans-serif" font-size="17" font-weight="800">72%</text>
+          <text x="430" y="118" fill="#f59e0b" font-family="Inter,sans-serif" font-size="9">▲ 3% vs prev month</text>
+
+          <!-- Revenue line chart -->
+          <rect x="10" y="138" width="340" height="150" rx="8" fill="#fff" stroke="#e7e5e4" stroke-width="1"/>
+          <text x="22" y="157" fill="#111827" font-family="Inter,sans-serif" font-size="11" font-weight="700">Revenue Trend</text>
+          <polyline points="30,250 60,230 90,245 120,210 150,220 180,190 210,200 240,175 270,185 300,160 330,140" fill="none" stroke="#6366f1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <polygon points="30,250 60,230 90,245 120,210 150,220 180,190 210,200 240,175 270,185 300,160 330,140 330,270 30,270" fill="#6366f1" fill-opacity="0.08"/>
+
+          <!-- Top items -->
+          <rect x="362" y="138" width="206" height="150" rx="8" fill="#fff" stroke="#e7e5e4" stroke-width="1"/>
+          <text x="374" y="157" fill="#111827" font-family="Inter,sans-serif" font-size="11" font-weight="700">Top Items</text>
+          <text x="374" y="177" fill="#111827" font-family="Inter,sans-serif" font-size="10">1. Butter Chicken</text>
+          <rect x="374" y="181" width="130" height="6" rx="3" fill="#e7e5e4"/>
+          <rect x="374" y="181" width="110" height="6" rx="3" fill="#f59e0b"/>
+          <text x="508" y="187" text-anchor="end" fill="#6b7280" font-family="Inter,sans-serif" font-size="9">₹42,800</text>
+
+          <text x="374" y="202" fill="#111827" font-family="Inter,sans-serif" font-size="10">2. Biryani</text>
+          <rect x="374" y="206" width="130" height="6" rx="3" fill="#e7e5e4"/>
+          <rect x="374" y="206" width="95" height="6" rx="3" fill="#f59e0b" fill-opacity=".8"/>
+          <text x="508" y="212" text-anchor="end" fill="#6b7280" font-family="Inter,sans-serif" font-size="9">₹37,200</text>
+
+          <text x="374" y="228" fill="#111827" font-family="Inter,sans-serif" font-size="10">3. Paneer Tikka</text>
+          <rect x="374" y="232" width="130" height="6" rx="3" fill="#e7e5e4"/>
+          <rect x="374" y="232" width="75" height="6" rx="3" fill="#f59e0b" fill-opacity=".6"/>
+          <text x="508" y="238" text-anchor="end" fill="#6b7280" font-family="Inter,sans-serif" font-size="9">₹29,100</text>
+
+          <text x="374" y="254" fill="#111827" font-family="Inter,sans-serif" font-size="10">4. Garlic Naan</text>
+          <rect x="374" y="258" width="130" height="6" rx="3" fill="#e7e5e4"/>
+          <rect x="374" y="258" width="55" height="6" rx="3" fill="#f59e0b" fill-opacity=".45"/>
+          <text x="508" y="264" text-anchor="end" fill="#6b7280" font-family="Inter,sans-serif" font-size="9">₹21,500</text>
+
+          <text x="374" y="276" fill="#111827" font-family="Inter,sans-serif" font-size="10">5. Lassi</text>
+          <rect x="374" y="280" width="130" height="6" rx="3" fill="#e7e5e4"/>
+          <rect x="374" y="280" width="38" height="6" rx="3" fill="#f59e0b" fill-opacity=".3"/>
+          <text x="508" y="286" text-anchor="end" fill="#6b7280" font-family="Inter,sans-serif" font-size="9">₹14,800</text>
+
+          <!-- Delivery split -->
+          <rect x="10" y="300" width="548" height="88" rx="8" fill="#fff" stroke="#e7e5e4" stroke-width="1"/>
+          <text x="22" y="319" fill="#111827" font-family="Inter,sans-serif" font-size="11" font-weight="700">Order Channel Split</text>
+          <rect x="22" y="330" width="120" height="10" rx="5" fill="#f59e0b"/>
+          <text x="22" y="356" fill="#6b7280" font-family="Inter,sans-serif" font-size="9">Dine-in 48%</text>
+          <rect x="158" y="330" width="80" height="10" rx="5" fill="#6366f1"/>
+          <text x="158" y="356" fill="#6b7280" font-family="Inter,sans-serif" font-size="9">Zomato 32%</text>
+          <rect x="254" y="330" width="50" height="10" rx="5" fill="#22c55e"/>
+          <text x="254" y="356" fill="#6b7280" font-family="Inter,sans-serif" font-size="9">Takeaway 20%</text>
+          <rect x="320" y="330" width="30" height="10" rx="5" fill="#a78bfa"/>
+          <text x="320" y="356" fill="#6b7280" font-family="Inter,sans-serif" font-size="9">Own App 12%</text>
+          <text x="22" y="374" fill="#6b7280" font-family="Inter,sans-serif" font-size="9">Avg delivery time: 28 min &nbsp;·&nbsp; Cancellation rate: 2.1%</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ STATS ══ -->
+<section class="stats-section">
+  <div class="container">
+    <div class="section-label reveal"><span class="tag">By the numbers</span></div>
+    <h2 class="section-title reveal reveal-delay-1">Built for real restaurants</h2>
+    <div class="stats-grid">
+      <div class="reveal">
+        <div class="stat-num">15+</div>
+        <div class="stat-label">Integrated modules</div>
+      </div>
+      <div class="reveal reveal-delay-1">
+        <div class="stat-num">&lt;200ms</div>
+        <div class="stat-label">API p95 response time</div>
+      </div>
+      <div class="reveal reveal-delay-2">
+        <div class="stat-num">50+</div>
+        <div class="stat-label">Atomic RBAC permissions</div>
+      </div>
+      <div class="reveal reveal-delay-3">
+        <div class="stat-num">0ms</div>
+        <div class="stat-label">KDS update latency (WebSocket)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ ROLES ══ -->
+<section class="roles-section" id="roles">
+  <div class="container">
+    <div class="section-label reveal"><span class="tag">Access Control</span></div>
+    <h2 class="section-title reveal reveal-delay-1">Right access for every role</h2>
+    <p class="section-sub reveal reveal-delay-2">Granular permission bundles — not just role names. Each staff member holds exactly what they need, nothing more.</p>
+
+    <div class="roles-grid">
+      <div class="role-card reveal">
+        <div class="role-badge"><div class="role-dot" style="background:#f59e0b"></div><span style="color:#f59e0b">Owner</span></div>
+        <div class="role-name">Restaurant Owner</div>
+        <div class="role-desc">Full access to every module, including financials, staff management, and platform settings.</div>
+        <div class="role-perms"><span class="role-perm">All modules</span><span class="role-perm">Billing</span><span class="role-perm">Analytics</span><span class="role-perm">Settings</span><span class="role-perm">Staff</span></div>
+      </div>
+      <div class="role-card reveal reveal-delay-1">
+        <div class="role-badge"><div class="role-dot" style="background:#6366f1"></div><span style="color:#6366f1">Manager</span></div>
+        <div class="role-name">Manager</div>
+        <div class="role-desc">Oversees operations — orders, staff rostering, inventory, and reporting. Cannot edit platform settings.</div>
+        <div class="role-perms"><span class="role-perm">Orders</span><span class="role-perm">Inventory</span><span class="role-perm">Staff</span><span class="role-perm">Analytics</span><span class="role-perm">Reports</span></div>
+      </div>
+      <div class="role-card reveal reveal-delay-2">
+        <div class="role-badge"><div class="role-dot" style="background:#22c55e"></div><span style="color:#22c55e">Cashier</span></div>
+        <div class="role-name">Cashier</div>
+        <div class="role-desc">Takes orders and handles billing. Can see customers and generate bills. No staff or inventory access.</div>
+        <div class="role-perms"><span class="role-perm">Orders</span><span class="role-perm">Billing</span><span class="role-perm">Customers</span></div>
+      </div>
+      <div class="role-card reveal">
+        <div class="role-badge"><div class="role-dot" style="background:#a78bfa"></div><span style="color:#a78bfa">Waiter</span></div>
+        <div class="role-name">Waiter</div>
+        <div class="role-desc">Takes and updates orders, sees the KDS for their tables, and manages reservations at the floor.</div>
+        <div class="role-perms"><span class="role-perm">Orders</span><span class="role-perm">KDS</span><span class="role-perm">Tables</span><span class="role-perm">Reservations</span></div>
+      </div>
+      <div class="role-card reveal reveal-delay-1">
+        <div class="role-badge"><div class="role-dot" style="background:#ef4444"></div><span style="color:#ef4444">Kitchen</span></div>
+        <div class="role-name">Kitchen Staff</div>
+        <div class="role-desc">KDS-only access. Sees order tickets, marks items ready, and updates preparation notes.</div>
+        <div class="role-perms"><span class="role-perm">KDS view</span><span class="role-perm">Mark ready</span><span class="role-perm">Item notes</span></div>
+      </div>
+      <div class="role-card reveal reveal-delay-2">
+        <div class="role-badge"><div class="role-dot" style="background:#38bdf8"></div><span style="color:#38bdf8">Delivery</span></div>
+        <div class="role-name">Delivery Rider</div>
+        <div class="role-desc">Sees only their assigned deliveries. Updates delivery status and marks orders delivered.</div>
+        <div class="role-perms"><span class="role-perm">My deliveries</span><span class="role-perm">Status updates</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ WHATSAPP ══ -->
+<section class="split-section">
+  <div class="container">
+    <div class="split-inner">
+      <div class="split-text reveal">
+        <span class="tag" style="color:#22c55e;background:rgba(34,197,94,0.1);border-color:rgba(34,197,94,0.25)">WhatsApp Integration</span>
+        <h3 class="split-title">Your restaurant stays in touch — automatically</h3>
+        <p class="split-desc">Powered by Baileys, TadkaTech sends WhatsApp messages the moment something happens. No third-party API costs. Your restaurant's own number.</p>
+        <div class="check-list">
+          <div class="check-item">Order confirmation sent the moment it's accepted</div>
+          <div class="check-item">Reservation reminders 2 hours before arrival</div>
+          <div class="check-item">Bill receipt as a WhatsApp message</div>
+          <div class="check-item">Full message log per customer in the CRM</div>
+          <div class="check-item">Delivery status updates for online orders</div>
+        </div>
+      </div>
+      <div class="split-visual reveal reveal-delay-2" style="background:#075e54;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,0.1)">
+        <svg viewBox="0 0 400 420" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%">
+          <!-- WA Header -->
+          <rect width="400" height="56" fill="#075e54"/>
+          <circle cx="32" cy="28" r="18" fill="#128c7e"/>
+          <text x="32" y="34" text-anchor="middle" fill="#fff" font-family="Inter,sans-serif" font-size="15" font-weight="700">R</text>
+          <text x="60" y="24" fill="#fff" font-family="Inter,sans-serif" font-size="13" font-weight="700">Rajdhani Kitchen</text>
+          <text x="60" y="40" fill="#a7f3d0" font-family="Inter,sans-serif" font-size="10">Online · typically replies instantly</text>
+
+          <!-- Chat background -->
+          <rect y="56" width="400" height="364" fill="#ece5dd"/>
+          <!-- Subtle pattern -->
+          <rect y="56" width="400" height="364" fill="url(#wabg)" opacity="0.3"/>
+
+          <!-- Messages from restaurant -->
+          <rect x="8" y="72" width="270" height="88" rx="8" fill="#fff" filter="drop-shadow(0 1px 2px rgba(0,0,0,0.1))"/>
+          <text x="20" y="91" fill="#128c7e" font-family="Inter,sans-serif" font-size="11" font-weight="700">Rajdhani Kitchen</text>
+          <text x="20" y="108" fill="#111" font-family="Inter,sans-serif" font-size="11">✅ Order #1042 confirmed!</text>
+          <text x="20" y="124" fill="#555" font-family="Inter,sans-serif" font-size="10">2× Butter Chicken, 1× Garlic Naan</text>
+          <text x="20" y="138" fill="#555" font-family="Inter,sans-serif" font-size="10">Est. ready: 25–30 minutes · Table 4</text>
+          <text x="248" y="152" text-anchor="end" fill="#888" font-family="Inter,sans-serif" font-size="9">7:14 PM ✓✓</text>
+
+          <rect x="8" y="172" width="260" height="72" rx="8" fill="#fff" filter="drop-shadow(0 1px 2px rgba(0,0,0,0.1))"/>
+          <text x="20" y="191" fill="#128c7e" font-family="Inter,sans-serif" font-size="11" font-weight="700">Rajdhani Kitchen</text>
+          <text x="20" y="208" fill="#111" font-family="Inter,sans-serif" font-size="11">🍽 Your order is ready!</text>
+          <text x="20" y="224" fill="#555" font-family="Inter,sans-serif" font-size="10">Table 4 — our team is on the way.</text>
+          <text x="238" y="236" text-anchor="end" fill="#888" font-family="Inter,sans-serif" font-size="9">7:38 PM ✓✓</text>
+
+          <!-- Customer message -->
+          <rect x="122" y="258" width="270" height="48" rx="8" fill="#dcf8c6" filter="drop-shadow(0 1px 2px rgba(0,0,0,0.1))"/>
+          <text x="134" y="278" fill="#111" font-family="Inter,sans-serif" font-size="11">Thanks! Could we get the bill please?</text>
+          <text x="380" y="298" text-anchor="end" fill="#888" font-family="Inter,sans-serif" font-size="9">7:52 PM ✓✓</text>
+
+          <rect x="8" y="318" width="290" height="96" rx="8" fill="#fff" filter="drop-shadow(0 1px 2px rgba(0,0,0,0.1))"/>
+          <text x="20" y="337" fill="#128c7e" font-family="Inter,sans-serif" font-size="11" font-weight="700">Rajdhani Kitchen</text>
+          <text x="20" y="354" fill="#111" font-family="Inter,sans-serif" font-size="11">🧾 Bill for Table 4 — Order #1042</text>
+          <text x="20" y="370" fill="#555" font-family="Inter,sans-serif" font-size="10">Subtotal ₹920 + GST ₹46 = ₹966</text>
+          <text x="20" y="385" fill="#555" font-family="Inter,sans-serif" font-size="10">Pay via UPI: rajdhanikitchen@upi</text>
+          <text x="20" y="400" fill="#22c55e" font-family="Inter,sans-serif" font-size="10" font-weight="600">Thank you for dining with us! ❤</text>
+          <text x="278" y="406" text-anchor="end" fill="#888" font-family="Inter,sans-serif" font-size="9">7:53 PM ✓✓</text>
+
+          <!-- Input bar -->
+          <rect x="0" y="420" width="400" height="36" fill="#f0f0f0"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ STACK ══ -->
+<section class="stack-section" id="stack">
+  <div class="container">
+    <div class="section-label reveal"><span class="tag">Technology</span></div>
+    <h2 class="section-title reveal reveal-delay-1">Engineered for the long haul</h2>
+    <p class="section-sub reveal reveal-delay-2">Every technology choice optimised for reliability, speed, and ease of hosting on affordable Indian cloud infrastructure.</p>
+    <div class="stack-grid reveal reveal-delay-3">
+      <div class="stack-chip"><span class="stack-icon">⚡</span>FastAPI (async Python)</div>
+      <div class="stack-chip"><span class="stack-icon">▲</span>Next.js 14 App Router</div>
+      <div class="stack-chip"><span class="stack-icon">🐘</span>PostgreSQL (schema-per-tenant)</div>
+      <div class="stack-chip"><span class="stack-icon">🔴</span>Redis + Celery</div>
+      <div class="stack-chip"><span class="stack-icon">🔌</span>WebSockets (KDS)</div>
+      <div class="stack-chip"><span class="stack-icon">💳</span>Razorpay</div>
+      <div class="stack-chip"><span class="stack-icon">💬</span>Baileys (WhatsApp)</div>
+      <div class="stack-chip"><span class="stack-icon">☁</span>Cloudflare R2</div>
+      <div class="stack-chip"><span class="stack-icon">🐳</span>Docker + Nginx</div>
+      <div class="stack-chip"><span class="stack-icon">🔒</span>JWT + Refresh Tokens</div>
+      <div class="stack-chip"><span class="stack-icon">🖨</span>ESC/POS Thermal Print</div>
+      <div class="stack-chip"><span class="stack-icon">📱</span>PWA-first</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ CTA ══ -->
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-box reveal">
+      <span class="tag">Get Started</span>
+      <h2 class="cta-title">Ready to run your restaurant<br>on one platform?</h2>
+      <p class="cta-sub">From the first order to the last bill — TadkaTech handles it all. Talk to us and we'll get your restaurant set up, personally.</p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+        <a href="https://wa.me/917042416189?text=Hi%2C%20I%27d%20like%20to%20learn%20more%20about%20TadkaTech" target="_blank" rel="noopener" class="btn btn-primary" style="padding:16px 40px;font-size:17px">Talk to us on WhatsApp →</a>
+        <a href="https://wa.me/917042416189?text=Hi%2C%20I%27d%20like%20to%20book%20a%20TadkaTech%20demo" target="_blank" rel="noopener" class="btn btn-ghost" style="padding:16px 40px;font-size:17px">Book a Demo</a>
+      </div>
+      <p style="margin-top:20px;font-size:13px;color:var(--muted2)">Personal onboarding · GST-ready billing · No setup fee</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ FOOTER ══ -->
+<footer class="footer">
+  <div class="container footer-inner">
+    <div class="footer-logo">
+      <div class="nav-logo-icon">T</div>
+      TadkaTech
+    </div>
+    <div class="footer-links">
+      <a href="#features">Features</a>
+      <a href="#modules">Modules</a>
+      <a href="#roles">Roles</a>
+      <a href="#stack">Stack</a>
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+    </div>
+    <div class="footer-copy">© 2026 TadkaTech. All rights reserved.</div>
+  </div>
+</footer>
+
+<script>
+// Sticky nav on scroll
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 40);
+}, { passive: true });
+
+// Scroll reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// 3D card tilt on feature cards
+document.querySelectorAll('.feature-card').forEach(card => {
+  card.addEventListener('mousemove', (e) => {
+    const rect = card.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    card.style.transform = `perspective(600px) rotateX(${-y * 6}deg) rotateY(${x * 6}deg) translateZ(4px)`;
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = '';
+  });
+});
+
+// Role card subtle 3D tilt
+document.querySelectorAll('.role-card').forEach(card => {
+  card.addEventListener('mousemove', (e) => {
+    const rect = card.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    card.style.transform = `perspective(500px) rotateX(${-y * 5}deg) rotateY(${x * 5}deg) translateY(-3px)`;
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = '';
+  });
+});
+
+// Animated counter on stats
+function animateCount(el, from, to, suffix, duration) {
+  let start = null;
+  const step = (ts) => {
+    if (!start) start = ts;
+    const progress = Math.min((ts - start) / duration, 1);
+    const ease = 1 - Math.pow(1 - progress, 3);
+    const current = Math.round(from + (to - from) * ease);
+    el.textContent = current + suffix;
+    if (progress < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+const statObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const el = e.target;
+      const target = parseInt(el.dataset.target);
+      const suffix = el.dataset.suffix || '';
+      animateCount(el, 0, target, suffix, 1500);
+      statObserver.unobserve(el);
+    }
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('[data-target]').forEach(el => statObserver.observe(el));
+</script>
+</body>
+</html>
