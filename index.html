@@ -361,7 +361,7 @@ body::before{
 .footer{padding:48px 0;border-top:1px solid var(--border)}
 .footer-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px}
 .footer-logo{display:flex;align-items:center;gap:8px;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:18px}
-.footer-links{display:flex;gap:24px}
+.footer-links{display:flex;flex-wrap:wrap;gap:24px}
 .footer-links a{font-size:13px;color:var(--muted2);transition:color .2s}
 .footer-links a:hover{color:var(--text)}
 .footer-copy{font-size:12px;color:var(--muted2)}
@@ -387,6 +387,10 @@ body::before{
   .stats-grid{grid-template-columns:1fr;gap:24px}
   .roles-grid{grid-template-columns:1fr}
   .cta-box{padding:40px 24px}
+
+  /* Footer: stack + wrap so links never overflow / get clipped on phones */
+  .footer-inner{flex-direction:column;text-align:center}
+  .footer-links{justify-content:center;row-gap:12px}
 
   /* Mobile nav: collapse links + CTAs behind a hamburger */
   .nav-toggle{display:flex}
