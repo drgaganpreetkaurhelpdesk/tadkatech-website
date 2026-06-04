@@ -381,6 +381,11 @@ body::before{
   .split-inner.reverse{direction:ltr}
   .stats-grid{grid-template-columns:repeat(2,1fr);gap:32px}
   .roles-grid{grid-template-columns:repeat(2,1fr)}
+
+  /* Trust bar: label becomes a centered heading, stats center evenly below */
+  .trust-inner{gap:24px 36px}
+  .trust-label{flex-basis:100%;text-align:center;white-space:normal;margin-bottom:4px}
+  .trust-divider{display:none}
 }
 @media(max-width:600px){
   .feature-grid{grid-template-columns:1fr}
