@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign in · TadkaTech</title>
+<meta name="description" content="Sign in to your TadkaTech restaurant. Enter your restaurant's slug to go to your sign-in page.">
+<meta name="theme-color" content="#08090f">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23f59e0b'/><text x='16' y='23' font-family='Georgia,serif' font-size='20' font-weight='900' text-anchor='middle' fill='%230a0b0f'>T</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#08090f;--card:#161829;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
+  --amber:#f59e0b;--amber2:#fbbf24;--amber-dim:rgba(245,158,11,0.15);
+  --red:#ef4444;
+  --text:#f1f5f9;--muted:#94a3b8;--muted2:#64748b;
+  --radius:12px;--radius-lg:16px;--radius-xl:24px;
+}
+html{font-size:16px}
+body{
+  font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);
+  line-height:1.6;min-height:100vh;overflow-x:hidden;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:32px 20px;position:relative;
+}
+/* soft brand glow */
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(245,158,11,0.10) 0%,transparent 60%);
+}
+a{color:inherit;text-decoration:none}
+
+.wrap{position:relative;z-index:1;width:100%;max-width:440px}
+
+/* logo */
+.brand{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:28px}
+.brand-icon{
+  width:38px;height:38px;border-radius:9px;background:var(--amber);color:#0a0b0f;
+  display:flex;align-items:center;justify-content:center;
+  font-family:serif;font-size:20px;font-weight:900;
+}
+.brand-name{font-family:'Bricolage Grotesque',sans-serif;font-size:24px;font-weight:800;letter-spacing:-.02em}
+
+/* card */
+.card{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius-xl);
+  padding:36px 32px;box-shadow:0 0 0 1px rgba(255,255,255,0.04),0 24px 60px rgba(0,0,0,0.45);
+}
+.title{font-family:'Bricolage Grotesque',sans-serif;font-size:26px;font-weight:800;letter-spacing:-.02em;line-height:1.2}
+.subtitle{color:var(--muted);font-size:14px;margin-top:8px}
+
+.field-label{display:block;font-size:13px;font-weight:600;color:var(--muted);margin:24px 0 8px}
+
+/* slug input group: app.tadkatech.in/ [ slug ] */
+.slug-group{
+  display:flex;align-items:center;gap:2px;
+  background:#0c0d18;border:1px solid var(--border2);border-radius:var(--radius);
+  padding:0 14px;transition:border-color .2s,box-shadow .2s;
+}
+.slug-group:focus-within{border-color:var(--amber);box-shadow:0 0 0 3px rgba(245,158,11,0.18)}
+.slug-prefix{color:var(--muted2);font-size:14px;white-space:nowrap;user-select:none;flex-shrink:0}
+.slug-input{
+  flex:1;min-width:0;background:transparent;border:none;outline:none;color:var(--text);
+  font-family:inherit;font-size:16px;font-weight:600;padding:14px 4px;
+}
+.slug-input::placeholder{color:var(--muted2);font-weight:400}
+
+/* live destination preview */
+.preview{
+  font-size:13px;color:var(--muted2);margin-top:12px;min-height:18px;
+  word-break:break-all;line-height:1.5;
+}
+.preview b{color:var(--muted);font-weight:600}
+
+.error{color:var(--red);font-size:13px;margin-top:12px;display:none}
+.error.show{display:block}
+
+.btn-go{
+  width:100%;margin-top:22px;
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  background:var(--amber);color:#0a0b0f;border:none;border-radius:10px;
+  font-family:inherit;font-size:15px;font-weight:700;padding:14px 24px;cursor:pointer;
+  transition:background .2s,transform .15s,opacity .2s;
+}
+.btn-go:hover{background:var(--amber2);transform:translateY(-1px)}
+.btn-go:disabled{opacity:.45;cursor:not-allowed;transform:none}
+
+.help{
+  margin-top:24px;padding-top:20px;border-top:1px solid var(--border);
+  font-size:13px;color:var(--muted2);line-height:1.7;
+}
+.help b{color:var(--muted);font-weight:600}
+
+.back{
+  display:inline-flex;align-items:center;gap:6px;justify-content:center;
+  width:100%;margin-top:24px;font-size:13px;color:var(--muted2);transition:color .2s;
+}
+.back:hover{color:var(--text)}
+
+@media(max-width:420px){
+  .card{padding:28px 20px}
+  .slug-prefix{font-size:12.5px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="brand" href="/" aria-label="TadkaTech home">
+    <span class="brand-icon">T</span>
+    <span class="brand-name">TadkaTech</span>
+  </a>
+
+  <main class="card">
+    <h1 class="title">Sign in to your restaurant</h1>
+    <p class="subtitle">Enter your restaurant's name (slug) — we'll take you to your sign-in page. No need to remember the full address.</p>
+
+    <form id="slugForm" novalidate>
+      <label class="field-label" for="slug">Restaurant slug</label>
+      <div class="slug-group">
+        <span class="slug-prefix">app.tadkatech.in/</span>
+        <input
+          id="slug" name="slug" class="slug-input" type="text"
+          placeholder="rajdhani-kitchen" autocomplete="off" autocapitalize="off"
+          autocorrect="off" spellcheck="false" inputmode="url" aria-describedby="preview" autofocus>
+      </div>
+
+      <p class="preview" id="preview"></p>
+      <p class="error" id="error">Please enter your restaurant slug.</p>
+
+      <button class="btn-go" id="go" type="submit" disabled>Continue &rarr;</button>
+    </form>
+
+    <p class="help">
+      <b>Where do I find my slug?</b> It's the short name in your TadkaTech web address —
+      <span style="color:var(--muted)">app.tadkatech.in/<b>your-slug</b></span>. If you're not sure, ask your
+      restaurant administrator or contact support.
+    </p>
+  </main>
+
+  <a class="back" href="/">&larr; Back to tadkatech.in</a>
+</div>
+
+<script>
+(function(){
+  var APP_BASE = 'https://app.tadkatech.in/';
+  var LOGIN_SUFFIX = '/login';
+  var STORE_KEY = 'tadka:lastSlug';
+
+  var input   = document.getElementById('slug');
+  var preview = document.getElementById('preview');
+  var error   = document.getElementById('error');
+  var goBtn   = document.getElementById('go');
+  var form    = document.getElementById('slugForm');
+
+  // Turn raw user input (incl. a pasted full URL) into a clean slug.
+  function normalizeSlug(raw){
+    var s = (raw || '').trim().toLowerCase();
+    // If they paste a full TadkaTech URL, pull the slug out of it.
+    var m = s.match(/(?:https?:\/\/)?(?:app\.)?tadkatech\.in\/([a-z0-9-]+)/);
+    if (m) s = m[1];
+    s = s.replace(/\s+/g, '-');      // spaces -> hyphen
+    s = s.replace(/[^a-z0-9-]/g, ''); // drop anything not a slug char
+    s = s.replace(/-+/g, '-');        // collapse repeated hyphens
+    s = s.replace(/^-+|-+$/g, '');    // trim leading/trailing hyphens
+    return s;
+  }
+
+  function destUrl(slug){ return APP_BASE + slug + LOGIN_SUFFIX; }
+
+  function render(){
+    var slug = normalizeSlug(input.value);
+    if (slug){
+      preview.innerHTML = 'You’ll go to <b>app.tadkatech.in/' + slug + '/login</b>';
+      goBtn.disabled = false;
+    } else {
+      preview.innerHTML = '';
+      goBtn.disabled = true;
+    }
+    error.classList.remove('show');
+  }
+
+  function submit(e){
+    if (e) e.preventDefault();
+    var slug = normalizeSlug(input.value);
+    if (!slug){
+      error.classList.add('show');
+      input.focus();
+      return;
+    }
+    try { localStorage.setItem(STORE_KEY, slug); } catch (_) {}
+    window.location.href = destUrl(slug);
+  }
+
+  // Pre-fill the last-used slug for returning users.
+  try {
+    var last = localStorage.getItem(STORE_KEY);
+    if (last && !input.value) input.value = last;
+  } catch (_) {}
+
+  input.addEventListener('input', render);
+  form.addEventListener('submit', submit);
+  render();
+})();
+</script>
+</body>
+</html>
