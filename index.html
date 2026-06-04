@@ -66,7 +66,7 @@ img{max-width:100%;display:block}
 .section-label{display:flex;justify-content:center;margin-bottom:20px}
 .section-title{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(28px,4vw,48px);font-weight:800;text-align:center;line-height:1.15;letter-spacing:-.02em}
 .section-sub{text-align:center;color:var(--muted);font-size:17px;max-width:560px;margin:16px auto 0;line-height:1.7}
-.btn{display:inline-flex;align-items:center;gap:8px;padding:13px 28px;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;border:none;transition:all .2s}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:13px 28px;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;border:none;transition:all .2s;white-space:nowrap}
 .btn-primary{background:var(--amber);color:#0a0b0f}
 .btn-primary:hover{background:var(--amber2);transform:translateY(-1px);box-shadow:0 8px 24px rgba(245,158,11,0.3)}
 .btn-ghost{background:transparent;color:var(--text);border:1px solid var(--border2)}
@@ -102,6 +102,17 @@ body::before{
 .nav-links a{font-size:14px;font-weight:500;color:var(--muted);transition:color .2s}
 .nav-links a:hover{color:var(--text)}
 .nav-cta{display:flex;align-items:center;gap:12px}
+.nav-toggle{
+  display:none;flex-direction:column;justify-content:center;gap:5px;
+  width:42px;height:42px;padding:0;flex:0 0 auto;
+  background:transparent;border:1px solid var(--border2);border-radius:10px;
+  cursor:pointer;transition:background .2s;
+}
+.nav-toggle:hover{background:rgba(255,255,255,0.05)}
+.nav-toggle span{display:block;width:18px;height:2px;border-radius:2px;background:var(--text);margin:0 auto;transition:transform .25s,opacity .2s}
+.nav.open .nav-toggle span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.nav.open .nav-toggle span:nth-child(2){opacity:0}
+.nav.open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
 
 /* ─── Hero ──────────────────────────────────────────────────────────────────── */
 .hero{
@@ -375,8 +386,17 @@ body::before{
   .feature-grid{grid-template-columns:1fr}
   .stats-grid{grid-template-columns:1fr;gap:24px}
   .roles-grid{grid-template-columns:1fr}
-  .nav-links{display:none}
   .cta-box{padding:40px 24px}
+
+  /* Mobile nav: collapse links + CTAs behind a hamburger */
+  .nav-toggle{display:flex}
+  .nav-inner{flex-wrap:wrap}
+  .nav-links,.nav-cta{display:none;flex-basis:100%}
+  .nav.open{background:rgba(8,9,15,0.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+  .nav.open .nav-links{display:flex;flex-direction:column;align-items:stretch;gap:0;width:100%;margin-top:14px}
+  .nav.open .nav-links a{padding:13px 4px;font-size:16px;border-top:1px solid var(--border)}
+  .nav.open .nav-cta{display:flex;width:100%;gap:10px;margin-top:14px}
+  .nav.open .nav-cta .btn{flex:1;justify-content:center;padding:13px 16px!important;font-size:15px!important}
 }
 </style>
 </head>
@@ -389,6 +409,9 @@ body::before{
       <div class="nav-logo-icon">T</div>
       TadkaTech
     </a>
+    <button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
     <div class="nav-links">
       <a href="#features">Features</a>
       <a href="#modules">Modules</a>
@@ -1268,6 +1291,22 @@ const nav = document.getElementById('nav');
 window.addEventListener('scroll', () => {
   nav.classList.toggle('scrolled', window.scrollY > 40);
 }, { passive: true });
+
+// Mobile hamburger menu
+const navToggle = document.getElementById('navToggle');
+if (navToggle) {
+  navToggle.addEventListener('click', () => {
+    const open = nav.classList.toggle('open');
+    navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  // Close the menu after tapping any link or CTA
+  nav.querySelectorAll('.nav-links a, .nav-cta a').forEach(a => {
+    a.addEventListener('click', () => {
+      nav.classList.remove('open');
+      navToggle.setAttribute('aria-expanded', 'false');
+    });
+  });
+}
 
 // Scroll reveal
 const observer = new IntersectionObserver((entries) => {
